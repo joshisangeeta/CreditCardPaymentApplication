@@ -23,7 +23,7 @@ public class StatementRestController {
 	@Autowired
 	private IStatementService statementService;
 	
-	@GetMapping("/getAll")
+	@GetMapping("/getAllStatements")
 	public ResponseEntity<List<StatementModel>> findAll() {
 		return ResponseEntity.ok(statementService.findAll());
 	}

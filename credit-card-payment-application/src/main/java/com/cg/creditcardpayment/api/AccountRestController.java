@@ -28,7 +28,7 @@ public class AccountRestController {
 	private IAccountService accountService;
 	
 	
-	@GetMapping("/getAll")
+	@GetMapping("/getAllAccounts")
 	public ResponseEntity<List<AccountModel>> findAll() {
 		return ResponseEntity.ok(accountService.findAll());
 	}

@@ -1,0 +1,109 @@
+GET: /users/getAllUsers
+
+GET: /users/getUser/{userId}
+
+POST: /users/addUser
+
+DELETE: /users/deleteUser/{userId}
+
+POST: /users/signIn
+
+PUT: /users/changePassword
+
+========================================
+
+
+GET: /customers/getAllCustomers
+
+GET: /customers/getCustomer/{userId}
+
+POST: /customers/addCustomer
+
+PUT: /customers/updateCustomer
+
+POST: /customers/addAccount/{customerId}
+
+GET: /customers/getAccounts/{customerId}
+
+POST: /customers/addCreditCard/{customerId}
+
+GET: /customers/getCreditCards/{customerId}
+
+
+===================================================
+
+GET: /accounts/getAllAccounts
+
+GET: /accounts/getAccount/{accountnumber}
+
+POST: /accounts/addAccount
+
+DELETE: /accounts/deleteAccount/{accountnumber}
+
+DELETE: /accounts/updateAccount
+
+
+
+===================================================
+
+GET: /creditcards/getAllCreditCards                         
+
+GET: /creditcards/getCreditCard/{cardNumber}
+
+POST: /creditcards/addCreditCard
+
+DELETE: /creditcards/deleteCreditCard/{cardNumber}
+
+PUT: /creditcards/updateCreditCard
+
+
+=====================================================
+
+
+GET: /transactions/getAllTransactions
+
+GET: /transactions/getTransaction/{transactionId}
+
+POST: /transactions/addTransaction
+
+PUT: /transactions/updateTransaction
+
+GET: /transactions/transact/{cardNumber}/{amount}/{description}
+
+
+==================================================================
+
+
+
+GET: /statements/getAllStatements
+
+GET: /statements/getStatement/{statementId}
+
+POST: /statements/addStatement
+
+PUT: /statements/updateStatement
+
+GET: /statements/generateBill/{cardNumber}
+
+GET: /statements/generateUnBilled/{cardNumber}
+
+GET: /statements/statementHistory/{cardNumber}
+
+
+
+====================================================================
+
+
+GET: /payments/getAllPayments
+
+GET: /payments/getPayment/{paymentId}
+
+POST: /payments/addPayment
+
+GET: /payments/pendingBills/{cardNumber}
+
+POST: /payments/pendingBills/payUsingUPI/{statementId}
+
+POST: /payments/pendingBills/payUsingAccount/{statementId}/{accountNumber}
+
+GET: /payments/paymentHistory/{cardNumber}

@@ -23,7 +23,7 @@ public class PaymentRestController {
 	@Autowired
 	private IPaymentService paymentService;
 	
-	@GetMapping("/getAll")
+	@GetMapping("/getAllPayments")
 	public ResponseEntity<List<PaymentModel>> findAll() {
 		return ResponseEntity.ok(paymentService.findAll());
 	}

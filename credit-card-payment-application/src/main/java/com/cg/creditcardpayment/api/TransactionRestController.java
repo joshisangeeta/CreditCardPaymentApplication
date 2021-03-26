@@ -24,7 +24,7 @@ public class TransactionRestController {
 	@Autowired
 	private ITransactionService transactionService;
 	
-	@GetMapping("/getAll")
+	@GetMapping("/getAllTransactions")
 	public ResponseEntity<List<TransactionModel>> findAll() {
 		return ResponseEntity.ok(transactionService.findAll());
 	}

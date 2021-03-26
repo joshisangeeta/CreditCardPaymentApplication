@@ -31,7 +31,7 @@ public class UserRestController {
 	@Autowired
 	private ICustomerService customerService;
 	
-	@GetMapping("/getAll")
+	@GetMapping("/getAllUsers")
 	public ResponseEntity<List<UserModel>> findAll() {
 		return ResponseEntity.ok(userService.findAll());
 	}

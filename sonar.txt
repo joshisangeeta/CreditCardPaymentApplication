@@ -2,3 +2,13 @@ ac3e7d0c540c15624e1182868e979c9bd26fdb09
 
 
 gradlew sonarqube -Dsonar.projectKey=CreditCardPayment -Dsonar.host.url=http://localhost:9000 -Dsonar.login=ac3e7d0c540c15624e1182868e979c9bd26fdb09
+
+
+
+
+
+95a2a5526b189c9662e5e03504fde02a0961bfbe
+
+
+
+gradlew sonarqube -Dsonar.projectKey=CreditCardPayment -Dsonar.host.url=http://localhost:9000 -Dsonar.login=95a2a5526b189c9662e5e03504fde02a0961bfbe

@@ -69,7 +69,18 @@ POST: /accounts/addAccount
 
 POST: /accounts/addAccount/{customerId}
 
+{
+        "accountNumber": "32633638970",
+        "accountName": "SBI",
+        "accountBalance": 65236.15,
+        "accountType": "SAVINGS"
+    }
+
+
 DELETE: /accounts/deleteAccount/{accountnumber}
+
+DELETE: /accounts/deleteAccount/{customerId}/{accountnumber}
+
 
 DELETE: /accounts/updateAccount
 
@@ -84,10 +95,21 @@ GET: /creditcards/getCreditCard/{cardNumber}
 POST: /creditcards/addCreditCard
 
 POST: /creditcards/addCreditCard/{customerId}
-
+{
+    "cardNumber": "425876987742",
+    "cardName": "MASTRO",
+    "cardType": "IRCTCPLATINUM",
+    "expiryDate": "2023-01-20",
+    "bankName": "SBI",
+    "cvv": 288,
+    "cardLimit": 20000.0,
+    "usedLimit": 0.0
+}
 GET: /creditcards/getAllCreditCards/{customerId}
 
 DELETE: /creditcards/deleteCreditCard/{cardNumber}
+
+DELETE: /creditcards/deleteCreditCard/{customerId}/{cardNumber}
 
 PUT: /creditcards/updateCreditCard
 

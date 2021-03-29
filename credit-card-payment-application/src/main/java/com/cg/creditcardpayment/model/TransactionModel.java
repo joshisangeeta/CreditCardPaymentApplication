@@ -38,42 +38,18 @@ public class TransactionModel {
 		/* Default Constructor*/
 	}
 
-	/**
-	 * @param transactionId
-	 * @param cardNumber
-	 * @param transactionDate
-	 * @param transactionTime
-	 * @param amount
-	 * @param status
-	 * @param description
-	 */
-//	public TransactionModel(Long transactionId,
-//			@NotNull(message = "CardNumber Cannot to be Null") @NotEmpty(message = "CardNumber cannot be Empty") String cardNumber,
-//			@NotNull(message = "date Cannot to be Null") @NotEmpty(message = "date cannot be Empty") LocalDate transactionDate,
-//			@NotNull(message = "time Cannot to be Null") @NotEmpty(message = "time cannot be Empty") LocalTime transactionTime,
-//			@NotNull(message = "amount Cannot to be Null") @NotEmpty(message = "amount cannot be Empty") Double amount,
-//			@NotNull(message = "status Cannot to be Null") @NotEmpty(message = "status cannot be Empty") String status,
-//			@NotNull(message = "description Cannot to be Null") @NotEmpty(message = "description cannot be Empty") String description) {
-//		super();
-//		this.transactionId = transactionId;
-//		this.cardNumber = cardNumber;
-//		this.transactionDate = transactionDate;
-//		this.transactionTime = transactionTime;
-//		this.amount = amount;
-//		this.status = status;
-//		this.description = description;
-//	}
-
 	public TransactionModel(Long transactionId,
 			@NotNull(message = "CardNumber Cannot to be Null") @NotEmpty(message = "CardNumber cannot be Empty") String cardNumber,
 			@NotNull(message = "amount Cannot to be Null") @NotEmpty(message = "amount cannot be Empty") Double amount,
+			@NotNull(message="date Cannot to be Null") @NotEmpty(message="date cannot be Empty") LocalDate transactionDate,
+			@NotNull(message="time Cannot to be Null") @NotEmpty(message="time cannot be Empty") LocalTime transactionTime,
 			@NotNull(message = "status Cannot to be Null") @NotEmpty(message = "status cannot be Empty") TransactionStatus status,
 			@NotNull(message = "description Cannot to be Null") @NotEmpty(message = "description cannot be Empty") String description) {
 		super();
 		this.transactionId = transactionId;
 		this.cardNumber = cardNumber;
-		this.transactionDate = LocalDate.now();
-		this.transactionTime = LocalTime.now();
+		this.transactionDate = transactionDate;
+		this.transactionTime = transactionTime;
 		this.amount = amount;
 		this.status = status;
 		this.description = description;
@@ -144,7 +120,6 @@ public class TransactionModel {
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		result = prime * result + ((transactionDate == null) ? 0 : transactionDate.hashCode());
-		result = prime * result + ((transactionId == null) ? 0 : transactionId.hashCode());
 		result = prime * result + ((transactionTime == null) ? 0 : transactionTime.hashCode());
 		return result;
 	}
@@ -182,11 +157,6 @@ public class TransactionModel {
 			if (other.transactionDate != null)
 				return false;
 		} else if (!transactionDate.equals(other.transactionDate))
-			return false;
-		if (transactionId == null) {
-			if (other.transactionId != null)
-				return false;
-		} else if (!transactionId.equals(other.transactionId))
 			return false;
 		if (transactionTime == null) {
 			if (other.transactionTime != null)

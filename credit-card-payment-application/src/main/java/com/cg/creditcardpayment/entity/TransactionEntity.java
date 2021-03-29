@@ -42,7 +42,7 @@ public class TransactionEntity {
 	@Column(name="description",nullable=false)
 	private String description;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne( fetch = FetchType.LAZY)
 	@JoinColumn(name="card_number")
 	private CreditCardEntity creditCard;
 	
@@ -50,28 +50,6 @@ public class TransactionEntity {
 		/* Default Constructor*/
 	}
 
-
-	/**
-	 * @param transactionId
-	 * @param status
-	 * @param transactionDate
-	 * @param transactionTime
-	 * @param cardNumber
-	 * @param amount
-	 * @param description
-	 * @param creditCard
-	 */
-//	public TransactionEntity(Long transactionId,String status, LocalDate transactionDate, LocalTime transactionTime, CreditCardEntity creditCard,
-//			Double amount, String description) {
-//		super();
-//		this.transactionId=transactionId;
-//		this.status = status;
-//		this.transactionDate = transactionDate;
-//		this.transactionTime = transactionTime;
-//		this.creditCard = creditCard;
-//		this.amount = amount;
-//		this.description = description;
-//	}
 
 	public TransactionEntity(Long transactionId, TransactionStatus status, CreditCardEntity creditCard,
 			Double amount, String description) {
@@ -165,13 +143,11 @@ public class TransactionEntity {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((amount == null) ? 0 : amount.hashCode());
-//		result = prime * result + ((cardNumber == null) ? 0 : cardNumber.hashCode());
 		result = prime * result + ((creditCard == null) ? 0 : creditCard.hashCode());
 		result = prime * result + ((transactionDate == null) ? 0 : transactionDate.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		result = prime * result + ((transactionTime == null) ? 0 : transactionTime.hashCode());
-		result = prime * result + ((transactionId == null) ? 0 : transactionId.hashCode());
 		return result;
 	}
 
@@ -190,11 +166,6 @@ public class TransactionEntity {
 				return false;
 		} else if (!amount.equals(other.amount))
 			return false;
-//		if (cardNumber == null) {
-//			if (other.cardNumber != null)
-//				return false;
-//		} else if (!cardNumber.equals(other.cardNumber))
-//			return false;
 		if (creditCard == null) {
 			if (other.creditCard != null)
 				return false;
@@ -219,11 +190,6 @@ public class TransactionEntity {
 			if (other.transactionTime != null)
 				return false;
 		} else if (!transactionTime.equals(other.transactionTime))
-			return false;
-		if (transactionId == null) {
-			if (other.transactionId != null)
-				return false;
-		} else if (!transactionId.equals(other.transactionId))
 			return false;
 		return true;
 	}

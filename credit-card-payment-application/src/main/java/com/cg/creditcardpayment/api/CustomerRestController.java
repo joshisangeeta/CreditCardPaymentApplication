@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cg.creditcardpayment.exception.AccountException;
 import com.cg.creditcardpayment.exception.CustomerException;
 import com.cg.creditcardpayment.model.AccountModel;
-import com.cg.creditcardpayment.model.CreditCardModel;
 import com.cg.creditcardpayment.model.CustomerModel;
 import com.cg.creditcardpayment.service.ICustomerService;
 
@@ -34,7 +33,7 @@ public class CustomerRestController {
 	}
 	
 	@GetMapping("/getCustomer/{userId}")
-	public ResponseEntity<CustomerModel> findById(@PathVariable("userId") String userId){
+	public ResponseEntity<CustomerModel> findById(@PathVariable("userId") String userId) throws CustomerException{
 		ResponseEntity<CustomerModel> response=null;
 		if(!customerService.existsById(userId)){
 			response=new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -44,20 +43,20 @@ public class CustomerRestController {
 		return response;
 	}
 	
-	@PostMapping("/addCustomer")
-	public ResponseEntity<String> add(@RequestBody CustomerModel customer) throws CustomerException {
+	@PostMapping("/addCustomer/{userId}")
+	public ResponseEntity<String> add(@RequestBody CustomerModel customer,@PathVariable("userId") String userId) throws CustomerException {
 		ResponseEntity<String> response=null;
 		if(customer==null) {
 			response = new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}else {
-			customer=customerService.add(customer);
+			customerService.addCustomer(customer,userId);
 			response= new ResponseEntity<>("Customer is Added",HttpStatus.CREATED);
 		}
 		return response;
 	}
 	
 	@DeleteMapping("/deleteCustomer/{userId}")
-	public ResponseEntity<String> deleteUser(@PathVariable("userId") String userId) {
+	public ResponseEntity<String> deleteUser(@PathVariable("userId") String userId) throws CustomerException {
 		ResponseEntity<String> response=null;
 		CustomerModel customer=customerService.findById(userId);
 		if(customer==null) {
@@ -70,14 +69,14 @@ public class CustomerRestController {
 		return response;
 	}
 	
-	@PutMapping("/updateCustomer")
-	public ResponseEntity<CustomerModel> updateUser(@RequestBody CustomerModel user) throws CustomerException{
+	@PutMapping("/updateCustomer/{userId}")
+	public ResponseEntity<CustomerModel> updateUser(@RequestBody CustomerModel user,@PathVariable("userId") String userId) throws CustomerException{
 		
 		ResponseEntity<CustomerModel> response=null;
 		if(user==null) {
 			response=new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}else {
-			user =customerService.save(user);
+			user =customerService.updateCustomer(user);
 			response =new ResponseEntity<>(user,HttpStatus.OK);
 		}
 		
@@ -85,7 +84,7 @@ public class CustomerRestController {
 	}
 	
 	@PostMapping("/addAccount/{customerId}")
-	public ResponseEntity<String> addAccount(@RequestBody AccountModel account,@PathVariable("customerId") String customerId) throws AccountException{
+	public ResponseEntity<String> addAccount(@RequestBody AccountModel account,@PathVariable("customerId") String customerId) throws AccountException, CustomerException{
 		ResponseEntity<String> response=null;
 		if(customerService.addAccount(account, customerId)) {
 			response = new ResponseEntity<>("Account is Added",HttpStatus.CREATED);
@@ -103,28 +102,6 @@ public class CustomerRestController {
 			response=new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}else {
 			response=new ResponseEntity<>(customerService.getAccounts(customerId),HttpStatus.FOUND);
-		}
-		return response;
-	}
-	@PostMapping("/addCreditCard/{customerId}")
-	public ResponseEntity<String> addCreditCard(@RequestBody CreditCardModel creditCard,@PathVariable("customerId") String customerId) throws AccountException{
-		ResponseEntity<String> response=null;
-		if(customerService.addCreditCard(creditCard, customerId)) {
-			response = new ResponseEntity<>("Credit Card is Added",HttpStatus.CREATED);
-		}else {
-			response= new ResponseEntity<>("Credit Card is not Added",HttpStatus.NOT_ACCEPTABLE);
-		}
-		return response;
-	}
-	
-	@GetMapping("/getCreditCards/{customerId}")
-	public ResponseEntity<List<CreditCardModel>> getCreditCards(@PathVariable("customerId") String customerId) throws AccountException{
-		ResponseEntity<List<CreditCardModel>> response=null;
-		List<CreditCardModel> creditCards=customerService.getCreditCards(customerId);
-		if(creditCards==null) {
-			response=new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}else {
-			response=new ResponseEntity<>(customerService.getCreditCards(customerId),HttpStatus.FOUND);
 		}
 		return response;
 	}

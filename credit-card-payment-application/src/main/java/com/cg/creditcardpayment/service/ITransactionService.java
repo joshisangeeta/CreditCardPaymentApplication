@@ -8,14 +8,14 @@ import com.cg.creditcardpayment.model.TransactionModel;
 
 public interface ITransactionService {
 
-	boolean existsById(Long transactionId);
+	boolean existsById(Long transactionId) throws TransactionException;
 
 	TransactionModel add(TransactionModel transaction) throws TransactionException;
 	TransactionModel save(TransactionModel transaction) throws TransactionException;
 	
-	void deleteById(Long transactionId);
+	void deleteById(Long transactionId) throws TransactionException;
 	
-	TransactionModel findById(Long transactionId);
+	TransactionModel findById(Long transactionId) throws TransactionException;
 	
 	List<TransactionModel> findAll();
 	

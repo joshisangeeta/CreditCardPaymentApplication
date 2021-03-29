@@ -8,12 +8,11 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cg.creditcardpayment.dao.ICreditCardRepository;
 import com.cg.creditcardpayment.dao.ICustomerRepository;
 import com.cg.creditcardpayment.entity.CustomerEntity;
+import com.cg.creditcardpayment.exception.AccountException;
 import com.cg.creditcardpayment.exception.CustomerException;
 import com.cg.creditcardpayment.model.AccountModel;
-import com.cg.creditcardpayment.model.CreditCardModel;
 import com.cg.creditcardpayment.model.CustomerModel;
 
 
@@ -24,16 +23,8 @@ public class CustomerServiceImpl implements ICustomerService {
 	private ICustomerRepository customerRepo;
 	
 	@Autowired
-	private ICreditCardRepository creditCardRepo;
-	
-	@Autowired
 	private EMParse parser;
 	
-	
-	/**
-	 * @param customerRepo
-	 * @param parser
-	 */
 	public CustomerServiceImpl(ICustomerRepository customerRepo) {
 		super();
 		this.customerRepo = customerRepo;
@@ -60,18 +51,22 @@ public class CustomerServiceImpl implements ICustomerService {
 		this.parser = parser;
 	}
 
+	String constant=" is Already Exists";
+	String constant1="Customer ";
 
+	
 	@Override
 	@Transactional
-	public CustomerModel add(CustomerModel customer) throws CustomerException {
+	public CustomerModel addCustomer(CustomerModel customer,String userId) throws CustomerException {
 		if(customer !=null) {
-			if(customerRepo.existsById(customer.getUserId())) {
-				throw new CustomerException("Customer "+customer.getUserId()+" is already Exists");
+			if(customerRepo.existsById(userId)) {
+				throw new CustomerException(constant1+customer.getUserId()+constant);
 			}else if (customerRepo.existsByContactNo(customer.getContactNo())) {
-				throw new CustomerException("Customer with number "+customer.getContactNo()+" is already Exists");
+				throw new CustomerException("Customer with number "+customer.getContactNo()+constant);
 			}else if (customerRepo.existsByEmail(customer.getEmail())) {
-				throw new CustomerException("Customer with email "+customer.getEmail()+" is already Exists");
+				throw new CustomerException("Customer with email "+customer.getEmail()+constant);
 			}else {
+				customer.setUserId(userId);
 				customer=parser.parse(customerRepo.save(parser.parse(customer)));
 			}
 		}
@@ -80,19 +75,31 @@ public class CustomerServiceImpl implements ICustomerService {
 
 	@Override
 	@Transactional
-	public CustomerModel save(CustomerModel customer) throws CustomerException {
+	public CustomerModel updateCustomer(CustomerModel customer) throws CustomerException {
+		if(customer ==null) {
+			throw new CustomerException("Customer details cannot be null");
+		}
 		return parser.parse(customerRepo.save(parser.parse(customer)));
 	}
 
 	@Override
 	@Transactional
-	public void deleteById(String userId) {
-		System.out.println(userId);
+	public void deleteById(String userId) throws CustomerException {
+		if(userId==null) {
+			throw new CustomerException("CustomerId can not be null");
+		}else if(!customerRepo.existsById(userId)) {
+			throw new CustomerException(constant1+userId+" is not Exists");
+		}
 		customerRepo.deleteById(userId);
 	}
 
 	@Override
-	public CustomerModel findById(String userId) {
+	public CustomerModel findById(String userId) throws CustomerException {
+		if(userId==null) {
+			throw new CustomerException("CustomerId can not be null");
+		}else if(!customerRepo.existsById(userId)) {
+			throw new CustomerException(constant1+userId+" is not Exists");
+		}
 		return parser.parse(customerRepo.findById(userId).orElse(null));
 	}
 
@@ -102,27 +109,43 @@ public class CustomerServiceImpl implements ICustomerService {
 	}
 
 	@Override
-	public boolean existsByContactNo(String contactNo) {
+	public boolean existsByContactNo(String contactNo) throws CustomerException {
+		if(contactNo==null) {
+			throw new CustomerException("contact No can not be null");
+		}
 		return customerRepo.existsByContactNo(contactNo);
 	}
 
 	@Override
-	public boolean existsByEmail(String email) {
+	public boolean existsByEmail(String email) throws CustomerException {
+		if(email==null) {
+			throw new CustomerException("email can not be null");
+		}
 		return customerRepo.existsByEmail(email);
 	}
 
 	@Override
-	public boolean existsById(String userId) {
-		// TODO Auto-generated method stub
+	public boolean existsById(String userId) throws CustomerException {
+		if(userId==null) {
+			throw new CustomerException("Id can not be null");
+		}
 		return customerRepo.existsById(userId);
 	}
 
 
 	@Override
-	public boolean addAccount(AccountModel account,String customerId) {
+	@Transactional
+	public boolean addAccount(AccountModel account,String customerId) throws AccountException, CustomerException{
 		CustomerEntity customer=customerRepo.findById(customerId).orElse(null);
 		boolean isAdded=false;
-		if(account!=null) {
+		if(account==null) {
+			throw new AccountException("Account can not be null");
+		}
+		if(customerId==null) {
+			throw new CustomerException("customer Id is null");
+		}else if(customer == null){
+			throw new CustomerException("Customer Id in null");
+		}else {
 			customer.getAccounts().add(parser.parse(account));
 			customer.setAccounts(customer.getAccounts());
 			customerRepo.save(customer);
@@ -133,37 +156,11 @@ public class CustomerServiceImpl implements ICustomerService {
 
 
 	@Override
-	public List<AccountModel> getAccounts(String customerId) {
+	public List<AccountModel> getAccounts(String customerId) throws AccountException {
 		CustomerEntity customer=customerRepo.findById(customerId).orElse(null);
 		if(customer ==null) {
-			return null;
+			throw new AccountException("No customer Exists");
 		}
 		return customer.getAccounts().stream().map(parser::parse).collect(Collectors.toList());
 	}
-
-
-	@Override
-	public boolean addCreditCard(CreditCardModel creditCard, String customerId) {
-		CustomerEntity customer=customerRepo.findById(customerId).orElse(null);
-		boolean isAdded=false;
-		if(creditCard!=null) {
-			creditCardRepo.save(parser.parse(creditCard));
-			customer.getCreditCard().add(parser.parse(creditCard));
-			customer.setCreditCard(customer.getCreditCard());
-			customerRepo.save(customer);
-			isAdded=true;
-		}
-		return isAdded;
-	}
-
-
-	@Override
-	public List<CreditCardModel> getCreditCards(String customerId) {
-		CustomerEntity customer=customerRepo.findById(customerId).orElse(null);
-		if(customer ==null) {
-			return null;
-		}
-		return customer.getCreditCard().stream().map(parser::parse).collect(Collectors.toList());
-	}
-
 }

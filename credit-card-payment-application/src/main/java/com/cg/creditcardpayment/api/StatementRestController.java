@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cg.creditcardpayment.exception.CreditCardException;
 import com.cg.creditcardpayment.exception.StatementException;
 import com.cg.creditcardpayment.model.StatementModel;
 import com.cg.creditcardpayment.service.IStatementService;
@@ -29,7 +30,7 @@ public class StatementRestController {
 	}
 	
 	@GetMapping("/getStatement/{statementId}")
-	public ResponseEntity<StatementModel> findById(@PathVariable("statementId") Long statementId){
+	public ResponseEntity<StatementModel> findById(@PathVariable("statementId") Long statementId) throws StatementException{
 		return ResponseEntity.ok(statementService.findById(statementId));
 	}
 	
@@ -44,21 +45,20 @@ public class StatementRestController {
 	public ResponseEntity<StatementModel> updateUser(@RequestBody StatementModel statement) throws StatementException{
 		statement =statementService.save(statement);
 		return ResponseEntity.ok(statement);
-		//new ResponseEntity<>(statement, HttpStatus.OK);
 	}
 	
 	@GetMapping("/generateBill/{cardNumber}")
-	public ResponseEntity<StatementModel> getBill(@PathVariable("cardNumber") String cardNumber){
+	public ResponseEntity<StatementModel> getBill(@PathVariable("cardNumber") String cardNumber) throws CreditCardException, StatementException{
 		return ResponseEntity.ok(statementService.getBilledStatement(cardNumber));
 	}
 	
 	@GetMapping("/generateUnBilled/{cardNumber}")
-	public ResponseEntity<StatementModel> getUnBill(@PathVariable("cardNumber") String cardNumber){
+	public ResponseEntity<StatementModel> getUnBill(@PathVariable("cardNumber") String cardNumber) throws CreditCardException{
 		return ResponseEntity.ok(statementService.getUnBilledStatement(cardNumber));
 	}
 	
 	@GetMapping("/statementHistory/{cardNumber}")
-	public ResponseEntity<List<StatementModel>> statementHistory(@PathVariable("cardNumber") String cardNumber) throws StatementException{
+	public ResponseEntity<List<StatementModel>> statementHistory(@PathVariable("cardNumber") String cardNumber) throws CreditCardException {
 		return ResponseEntity.ok(statementService.statementHistory(cardNumber));
 	}
 	

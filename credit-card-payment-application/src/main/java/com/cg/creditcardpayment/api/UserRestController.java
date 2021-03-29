@@ -16,9 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cg.creditcardpayment.exception.UserException;
 import com.cg.creditcardpayment.model.ChangePassword;
-import com.cg.creditcardpayment.model.CustomerModel;
+import com.cg.creditcardpayment.model.SignUp;
 import com.cg.creditcardpayment.model.UserModel;
-import com.cg.creditcardpayment.service.ICustomerService;
 import com.cg.creditcardpayment.service.IUserService;
 
 @RestController
@@ -28,8 +27,6 @@ public class UserRestController {
 	@Autowired
 	private IUserService userService;
 	
-	@Autowired
-	private ICustomerService customerService;
 	
 	@GetMapping("/getAllUsers")
 	public ResponseEntity<List<UserModel>> findAll() {
@@ -37,28 +34,21 @@ public class UserRestController {
 	}
 	
 	@GetMapping("/getUser/{userId}")
-	public ResponseEntity<UserModel> findById(@PathVariable("userId")String userId) throws UserException{
-		ResponseEntity<UserModel> response=null;
-		if(!(userService.existsById(userId)) || userId==null) {
-			response=new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}else {
-			response=new ResponseEntity<>(userService.findById(userId),HttpStatus.FOUND);
-		}
-		return response;
+	public ResponseEntity<UserModel> findById(@PathVariable("userId")String userId) throws UserException {
+		return new ResponseEntity<>(userService.findById(userId),HttpStatus.FOUND);
 	}
 		
 	@PostMapping("/signIn")
-	public ResponseEntity<CustomerModel> signIn(@RequestBody UserModel user) throws UserException{
-		ResponseEntity<CustomerModel> response=null;
+	public ResponseEntity<String> signIn(@RequestBody UserModel user) throws UserException{
+		ResponseEntity<String> response=null;
 		if(userService.existsById(user.getUserId())) {
-			CustomerModel customer=customerService.findById(user.getUserId());
 			if(userService.signIn(user)) {
-				response=new ResponseEntity<>(customer,HttpStatus.ACCEPTED);
+				response=new ResponseEntity<>("Signed In "+user.getUserId(),HttpStatus.ACCEPTED);
 			}else {
-				response=new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+				response=new ResponseEntity<>("Login Id and password did not match",HttpStatus.UNAUTHORIZED);
 			}		
 		}else {
-			response=new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			response=new ResponseEntity<>("User with "+user.getUserId()+" Does not exists",HttpStatus.NOT_FOUND);
 		}
 		return response;
 	}
@@ -66,31 +56,18 @@ public class UserRestController {
 	
 	@PostMapping("/addUser")
 	public ResponseEntity<String> add(@RequestBody UserModel user) throws UserException {
-		ResponseEntity<String> response=null;
-		if(user==null) {
-			response = new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}else {
-			user=userService.add(user);
-			response= new ResponseEntity<>("User is Added",HttpStatus.CREATED);
-		}
-		return response;
+		userService.add(user);
+		return new ResponseEntity<>("User is Added",HttpStatus.CREATED);
 	}
 	
 	@DeleteMapping("/deleteUser/{userId}")
-	public ResponseEntity<String> deleteUser(@PathVariable("userId") String userId) {
-		ResponseEntity<String> response=null;
-		UserModel user=userService.findById(userId);
-		if(user==null) {
-			response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}else {
-			userService.deleteById(userId);
-			response = new ResponseEntity<>("User is Deleted",HttpStatus.OK);
-		}
-		return response;
+	public ResponseEntity<String> deleteUser(@PathVariable("userId") String userId) throws UserException {
+		userService.deleteById(userId);
+		return new ResponseEntity<>("User is Deleted",HttpStatus.OK);
 	}
 	
 	@PutMapping("/changePassword")
-	public ResponseEntity<String> updateUser(@RequestBody ChangePassword changePassword ) throws UserException{
+	public ResponseEntity<String> updateUser(@RequestBody ChangePassword changePassword ) throws UserException {
 		ResponseEntity<String> response=null;
 		UserModel user=userService.findById(changePassword.getUserId());
 		if(user!=null) {
@@ -99,6 +76,19 @@ public class UserRestController {
 			}else {
 				response=new ResponseEntity<>("Password not Changed",HttpStatus.NOT_ACCEPTABLE);
 			}
+		}else {
+			response=new ResponseEntity<>(HttpStatus.NO_CONTENT);	
+		}
+		return response;
+	}
+	
+	@PutMapping("/signUp")
+	public ResponseEntity<UserModel> signUp(@RequestBody SignUp signUp ) throws UserException {
+		ResponseEntity<UserModel> response=null;
+		UserModel user=userService.findById(signUp.getUserId());
+		if(user!=null) {
+			user=userService.signUp(signUp);
+			response=new ResponseEntity<>(user,HttpStatus.ACCEPTED);
 		}else {
 			response=new ResponseEntity<>(HttpStatus.NO_CONTENT);	
 		}

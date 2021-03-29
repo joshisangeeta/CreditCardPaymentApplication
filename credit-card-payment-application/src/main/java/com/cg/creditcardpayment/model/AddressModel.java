@@ -5,11 +5,10 @@ import java.util.Set;
 
 import javax.persistence.Embeddable;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-
-import org.checkerframework.common.aliasing.qual.Unique;
 
 import com.cg.creditcardpayment.entity.CustomerEntity;
 
@@ -20,7 +19,6 @@ public class AddressModel implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	@NotNull
-	@Unique
 	private String doorNo;
 	
 	@NotNull(message="street name cannot be null")	
@@ -45,6 +43,7 @@ public class AddressModel implements Serializable{
 	private Integer pincode;
 	
 	@OneToMany
+	@Transient
 	private Set<CustomerEntity> customers;
 	
 	public AddressModel() {

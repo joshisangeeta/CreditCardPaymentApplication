@@ -12,11 +12,12 @@ public class UserModel {
 	
 	@NotNull(message="user id cannot be null")	
 	@NotBlank(message="user id cannot be blank")
+	@Pattern(regexp="^[A-Za-z][A-Za-z0-9]{3,20}$")
 	private String userId;
 	
 	@NotNull(message="password cannot be null")	
 	@NotBlank(message="password cannot be blank")
-	@Pattern(regexp="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])(?=\\\\S+$).{8, 30}$")
+	@Pattern(regexp="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&()])(?=\\\\S+$).{8,30}$")
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
 	
@@ -26,16 +27,9 @@ public class UserModel {
 		/* Default Constructor*/
 	}
 
-	
-
-	/**
-	 * @param userId
-	 * @param password
-	 * @param role
-	 */
 	public UserModel(
-			@NotNull(message = "user id cannot be null") @NotBlank(message = "user id cannot be blank") String userId,
-			@NotNull(message = "password cannot be null") @NotBlank(message = "password cannot be blank") @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])(?=\\\\S+$).{8, 30}$") String password,
+			@NotNull(message = "user id cannot be null") @NotBlank(message = "user id cannot be blank") @Pattern(regexp="^[A-Za-z][A-Za-z0-9]{3,20}$") String userId,
+			@NotNull(message = "password cannot be null") @NotBlank(message = "password cannot be blank") @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&()])(?=\\\\S+$).{8,30}$") String password,
 			String role) {
 		super();
 		this.userId = userId;
@@ -53,7 +47,6 @@ public class UserModel {
 		this.userId = userId;
 	}
 
-//	@JsonIgnore
 	public String getPassword() {
 		return password;
 	}

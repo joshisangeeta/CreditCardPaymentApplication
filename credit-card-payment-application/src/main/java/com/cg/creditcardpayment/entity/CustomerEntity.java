@@ -39,7 +39,7 @@ public class CustomerEntity {
 	@Column(name="date_of_birth",nullable=false)
 	private  LocalDate dob;
 	
-	@OneToOne(mappedBy="user")
+	@OneToOne(cascade=CascadeType.ALL, mappedBy="user")
 	private UserEntity user;
 		
 	@Embedded

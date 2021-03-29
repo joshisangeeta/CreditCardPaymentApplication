@@ -1,7 +1,7 @@
 package com.cg.creditcardpayment.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -21,6 +21,7 @@ import com.cg.creditcardpayment.dao.IPaymentRepository;
 import com.cg.creditcardpayment.entity.CreditCardEntity;
 import com.cg.creditcardpayment.entity.CustomerEntity;
 import com.cg.creditcardpayment.entity.PaymentEntity;
+import com.cg.creditcardpayment.exception.PaymentException;
 import com.cg.creditcardpayment.model.CardName;
 import com.cg.creditcardpayment.model.CardType;
 import com.cg.creditcardpayment.model.PaymentMethod;
@@ -38,7 +39,7 @@ class PaymentServiceTest {
 	@Test
 	@DisplayName("PaymentDetails should retrive")
 	void testGetAll() {
-		CreditCardEntity creditCard1=new CreditCardEntity("2568479632140",CardName.VISA,CardType.Gold,LocalDate.parse("2022-10-18"),"SBI",623,10000.0,10000.0,new CustomerEntity());
+		CreditCardEntity creditCard1=new CreditCardEntity("2568479632140",CardName.VISA,CardType.GOLD,LocalDate.parse("2022-10-18"),"SBI",623,10000.0,10000.0,new CustomerEntity());
 		
 		List<PaymentEntity> testData=Arrays.asList(new PaymentEntity[] {
 				new PaymentEntity(1L,PaymentMethod.UPI,LocalDate.now(),LocalTime.now(),6000.0,creditCard1),
@@ -61,8 +62,8 @@ class PaymentServiceTest {
 	
 	@Test
 	@DisplayName("get by Id ")
-	void testGetById () {
-		CreditCardEntity creditCard1=new CreditCardEntity("2568479632140",CardName.VISA,CardType.Gold,LocalDate.parse("2022-10-18"),"SBI",623,10000.0,10000.0,new CustomerEntity());
+	void testGetById () throws PaymentException {
+		CreditCardEntity creditCard1=new CreditCardEntity("2568479632140",CardName.VISA,CardType.GOLD,LocalDate.parse("2022-10-18"),"SBI",623,10000.0,10000.0,new CustomerEntity());
 		
 		PaymentEntity testdata=new PaymentEntity(1L,PaymentMethod.UPI,LocalDate.now(),LocalTime.now(),6000.0,creditCard1);
 		
@@ -78,12 +79,13 @@ class PaymentServiceTest {
 	
 	@Test
 	@DisplayName("get by id return null")
-	void testGetByIdNull() {		
+	void testGetByIdNull() throws PaymentException {		
 		
-		Mockito.when(paymentRepo.findById(1L)).thenReturn(Optional.empty());
+//		Mockito.when(paymentRepo.findById(1L)).thenReturn(Optional.empty());
 		
-		PaymentModel actual = service.findById(1L);
-		assertNull(actual);
+//		PaymentModel actual = service.findById(1L);
+//		assertNull(actual);
+		assertThrows(PaymentException.class,()->{service.findById(1L);});
 	}
 	
 	

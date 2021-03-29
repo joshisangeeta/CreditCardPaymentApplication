@@ -7,7 +7,5 @@ import com.cg.creditcardpayment.entity.CreditCardEntity;
 
 @Repository
 public interface ICreditCardRepository extends JpaRepository<CreditCardEntity, String>{
-	
-
 
 }

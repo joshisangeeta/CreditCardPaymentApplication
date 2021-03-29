@@ -5,12 +5,16 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import com.cg.creditcardpayment.model.AccountType;
 
 @Entity
 @Table(name="accounts")
@@ -26,7 +30,8 @@ public class AccountEntity {
 	private Double accountBalance;
 	
 	@Column(name="account_Type", nullable=false)
-	private String accountType;
+	@Enumerated(EnumType.STRING)
+	private AccountType accountType;
 	
 	@ManyToMany(fetch=FetchType.LAZY,cascade= CascadeType.ALL)
 	@JoinTable(name="customer_account",
@@ -38,7 +43,7 @@ public class AccountEntity {
 		/* Default Constructor */
 	}
 	
-	public AccountEntity(String accountNumber, String accountName, Double accountBalance, String accountType) {
+	public AccountEntity(String accountNumber, String accountName, Double accountBalance, AccountType accountType) {
 		super();
 		this.accountNumber = accountNumber;
 		this.accountName = accountName;
@@ -78,11 +83,11 @@ public class AccountEntity {
 		this.accountBalance = accountBalance;
 	}
 
-	public String getAccountType() {
+	public AccountType getAccountType() {
 		return accountType;
 	}
 
-	public void setAccountType(String accountType) {
+	public void setAccountType(AccountType accountType) {
 		this.accountType = accountType;
 	}
 
@@ -98,6 +103,9 @@ public class AccountEntity {
 		return result;
 	}
 
+	
+
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -122,10 +130,7 @@ public class AccountEntity {
 				return false;
 		} else if (!accountNumber.equals(other.accountNumber))
 			return false;
-		if (accountType == null) {
-			if (other.accountType != null)
-				return false;
-		} else if (!accountType.equals(other.accountType))
+		if (accountType != other.accountType)
 			return false;
 		if (customers == null) {
 			if (other.customers != null)

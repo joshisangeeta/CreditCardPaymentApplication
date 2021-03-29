@@ -1,8 +1,8 @@
 package com.cg.creditcardpayment.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -22,7 +22,6 @@ import com.cg.creditcardpayment.dao.ICustomerRepository;
 import com.cg.creditcardpayment.entity.CreditCardEntity;
 import com.cg.creditcardpayment.entity.CustomerEntity;
 import com.cg.creditcardpayment.exception.CreditCardException;
-import com.cg.creditcardpayment.model.AddressModel;
 import com.cg.creditcardpayment.model.CardName;
 import com.cg.creditcardpayment.model.CardType;
 import com.cg.creditcardpayment.model.CreditCardModel;
@@ -48,15 +47,15 @@ class CreditCardServiceTest {
 	void testGetAll() {
 		
 		List<CreditCardEntity> testData=Arrays.asList(new CreditCardEntity[] {
-				new CreditCardEntity("2568479632140",CardName.VISA,CardType.Gold,LocalDate.parse("2022-10-18"),"SBI",623,10000.0,10000.0,new CustomerEntity()),
-				new CreditCardEntity("2568479632444",CardName.VISA,CardType.Gold,LocalDate.parse("2023-05-22"),"SBI",528,10000.0,10000.0,new CustomerEntity())
+				new CreditCardEntity("2568479632140",CardName.VISA,CardType.GOLD,LocalDate.parse("2022-10-18"),"SBI",623,10000.0,10000.0,new CustomerEntity()),
+				new CreditCardEntity("2568479632444",CardName.VISA,CardType.GOLD,LocalDate.parse("2023-05-22"),"SBI",528,10000.0,10000.0,new CustomerEntity())
 		});
 		
 		Mockito.when(creditCardRepo.findAll()).thenReturn(testData);
 		
 		List<CreditCardModel> expected=Arrays.asList(new CreditCardModel[] {
-				new CreditCardModel("2568479632140",CardName.VISA,CardType.Gold,LocalDate.parse("2022-10-18"),"SBI",623,10000.0,10000.0,new CustomerEntity().getUserId()),
-				new CreditCardModel("2568479632444",CardName.VISA,CardType.Gold,LocalDate.parse("2023-05-22"),"SBI",528,10000.0,10000.0,new CustomerEntity().getUserId())
+				new CreditCardModel("2568479632140",CardName.VISA,CardType.GOLD,LocalDate.parse("2022-10-18"),"SBI",623,10000.0,10000.0,new CustomerEntity().getUserId()),
+				new CreditCardModel("2568479632444",CardName.VISA,CardType.GOLD,LocalDate.parse("2023-05-22"),"SBI",528,10000.0,10000.0,new CustomerEntity().getUserId())
 		});
 		
 		List<CreditCardModel> actual = service.findAll();
@@ -65,17 +64,16 @@ class CreditCardServiceTest {
 
 	}
 	
-	
 	@Test
 	@DisplayName("get by Id ")
-	void testGetById () {
-		CreditCardEntity testdata=new CreditCardEntity("2568479632140",CardName.VISA,CardType.Gold,LocalDate.parse("2022-10-18"),"SBI",623,10000.0,10000.0,new CustomerEntity());
+	void testGetById () throws CreditCardException {
+		CreditCardEntity testdata=new CreditCardEntity("2568479632140",CardName.VISA,CardType.GOLD,LocalDate.parse("2022-10-18"),"SBI",623,10000.0,10000.0,new CustomerEntity());
 		
-		CreditCardModel expected=new CreditCardModel("2568479632140",CardName.VISA,CardType.Gold,LocalDate.parse("2022-10-18"),"SBI",623,10000.0,10000.0,new CustomerEntity().getUserId());
+		CreditCardModel expected=new CreditCardModel("2568479632140",CardName.VISA,CardType.GOLD,LocalDate.parse("2022-10-18"),"SBI",623,10000.0,10000.0,new CustomerEntity().getUserId());
 		
 		Mockito.when(creditCardRepo.findById(testdata.getCardNumber())).thenReturn(Optional.of(testdata));
 	
-		CreditCardModel actual=service.findById(testdata.getCardNumber());
+		CreditCardModel actual=service.getParser().parse(creditCardRepo.findById(testdata.getCardNumber()).orElse(null));
 		
 		assertEquals(expected,actual);
 	}
@@ -122,13 +120,18 @@ class CreditCardServiceTest {
 
 	
 	@Test
-	@DisplayName("get by id return null")
-	void testGetByIdNull() {		
+	@DisplayName("get by id throw Exception")
+	void testGetByIdNull() throws CreditCardException {		
 		
-		Mockito.when(creditCardRepo.findById("425631257892")).thenReturn(Optional.empty());
+		String Expected="Card Number425631257892 does not exists";
+//		Mockito.when(creditCardRepo.findById("425631257892")).thenReturn(Optional.empty()));
 		
-		CreditCardModel actual = service.findById("425631257892");
-		assertNull(actual);
+		CreditCardException exp=assertThrows(CreditCardException.class,()->{service.findById("425631257892");});
+		
+		
+		
+		assertEquals(Expected,exp.getMessage());
+	
 	}
 	
 }

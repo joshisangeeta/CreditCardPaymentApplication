@@ -49,7 +49,7 @@ public class EMParse {
 			new CreditCardModel(source.getCardNumber(),
 						source.getCardName(),
 						source.getCardType(),
-						source.getCardExpiry(),
+						source.getExpiryDate(),
 						source.getBankName(),
 						source.getCvv(),
 						source.getCreditLimit(),
@@ -101,7 +101,6 @@ public class EMParse {
 	}
 	
 	public PaymentEntity parse(PaymentModel source) {
-		System.out.println(source.getPaymentId());
 		return source==null?null:
 				new PaymentEntity(source.getPaymentId(),
 								source.getMethod(),
@@ -118,7 +117,8 @@ public class EMParse {
 						source.getDueAmount(),
 						source.getBillDate(),
 						source.getDueDate(),
-						source.getCreditCard().getCardNumber());
+						source.getCreditCard().getCardNumber(),
+						source.getCreditCard().getCustomer().getName());
 	}
 	
 	public StatementEntity parse(StatementModel source) {
@@ -136,6 +136,8 @@ public class EMParse {
 			new TransactionModel(source.getTransactionId(),
 						source.getCreditCard().getCardNumber(),
 						source.getAmount(),
+						source.getTransactionDate(),
+						source.getTransactionTime(),
 						source.getStatus(),
 						source.getDescription());
 	}

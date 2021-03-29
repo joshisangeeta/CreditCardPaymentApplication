@@ -7,6 +7,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 public class CreditCardModel {
 	
 	@NotNull(message="card number cannot be null")	
@@ -48,38 +51,12 @@ public class CreditCardModel {
 	
 	@NotNull(message="customerId cannot be null")	
 	@NotBlank(message="customerId cannot be blank")
+	@JsonProperty(access = Access.WRITE_ONLY)
     private String customerId;
 	
 	public CreditCardModel() {
 		/* Default Constructor */
 	}
-
-
-	/**
-	 * @param cardNumber
-	 * @param cardName
-	 * @param cardType
-	 * @param expiryDate
-	 * @param bankName
-	 * @param cvv
-	 */
-//	public CreditCardModel(
-//			@NotNull(message = "card number cannot be null") @NotBlank(message = "card number cannot be blank") @Pattern(regexp = "[0-9]{16}") String cardNumber,
-//			@NotNull(message = "card name cannot be null") @NotBlank(message = "card name cannot be blank") CardName cardName,
-//			@NotNull(message = "card type cannot be null") @NotBlank(message = "card type cannot be blank") CardType cardType,
-//			@NotNull(message = "card expiry date cannot be null") @Future(message = "Expiry date cannot be in future") LocalDate expiryDate,
-//			@NotNull(message = "Bank name cannot be null") @NotBlank(message = "Bank name cannot be blank") String bankName,
-//			@NotNull(message = "cvv cannot be null") @NotBlank(message = "cvv cannot be blank") @Pattern(regexp = "[0-9]{3}") Integer cvv) {
-//		super();
-//		this.cardNumber = cardNumber;
-//		this.cardName = cardName;
-//		this.cardType = cardType;
-//		this.expiryDate = expiryDate;
-//		this.bankName = bankName;
-//		this.cvv = cvv;
-//	}
-
-
 
 
 	/**

@@ -68,7 +68,7 @@ class CustomerServiceTest {
 
 		CustomerModel expected=new CustomerModel("U107","Venkata","venkatasai1479@gmail.com","7207388240",LocalDate.parse("1999-10-18"),address1);
 				
-		CustomerModel actual = service.add(service.getParser().parse(customer1));
+		CustomerModel actual = service.addCustomer(service.getParser().parse(customer1),customer1.getUserId());
 		
 		assertEquals(expected,actual);
 
@@ -85,7 +85,7 @@ class CustomerServiceTest {
 
 		CustomerModel expected=new CustomerModel("U107","Venkata","venkatasai1479@gmail.com","7207388240",LocalDate.parse("1999-10-18"),address1);
 		
-		CustomerModel added = service.add(service.getParser().parse(customer1));
+		CustomerModel added = service.addCustomer(service.getParser().parse(customer1),customer1.getUserId());
 		
 		assertEquals(expected,added);
 		
@@ -100,7 +100,7 @@ class CustomerServiceTest {
 	
 	@Test
 	@DisplayName("get by Id ")
-	void testGetById () {
+	void testGetById () throws CustomerException {
 		AddressModel address1=new AddressModel("10-10A","kbr","Jublihills","Hydrabad","Telangana",500055);
 		CustomerEntity testdata=new CustomerEntity("U107","Venkata","venkatasai1479@gmail.com","7207388240",LocalDate.parse("1999-10-18"),address1);
 		
@@ -116,7 +116,7 @@ class CustomerServiceTest {
 	
 	@Test
 	@DisplayName("get by Id not exists")
-	void testGetByIdNotExists () {
+	void testGetByIdNotExists () throws CustomerException {
 		AddressModel address1=new AddressModel("10-10A","kbr","Jublihills","Hydrabad","Telangana",500055);
 		CustomerEntity testdata=new CustomerEntity("U107","Venkata","venkatasai1479@gmail.com","7207388240",LocalDate.parse("1999-10-18"),address1);
 		
@@ -128,7 +128,7 @@ class CustomerServiceTest {
 	
 	@Test
 	@DisplayName("exists by number ")
-	void testExistsBynumber () {
+	void testExistsBynumber () throws CustomerException {
 		AddressModel address1=new AddressModel("10-10A","kbr","Jublihills","Hydrabad","Telangana",500055);
 		CustomerEntity testdata=new CustomerEntity("U107","Venkata","venkatasai1479@gmail.com","7207388240",LocalDate.parse("1999-10-18"),address1);
 		
@@ -143,7 +143,7 @@ class CustomerServiceTest {
 	
 	@Test
 	@DisplayName("exists by Email ")
-	void testExistsByEmail() {
+	void testExistsByEmail() throws CustomerException {
 		AddressModel address1=new AddressModel("10-10A","kbr","Jublihills","Hydrabad","Telangana",500055);
 		CustomerEntity testdata=new CustomerEntity("U107","Venkata","venkatasai1479@gmail.com","7207388240",LocalDate.parse("1999-10-18"),address1);
 		
@@ -158,7 +158,7 @@ class CustomerServiceTest {
 	
 	@Test
 	@DisplayName("get by id return null")
-	void testGetByIdNull() {		
+	void testGetByIdNull() throws CustomerException {		
 		
 		Mockito.when(customerRepo.findById("U101")).thenReturn(Optional.empty());
 		

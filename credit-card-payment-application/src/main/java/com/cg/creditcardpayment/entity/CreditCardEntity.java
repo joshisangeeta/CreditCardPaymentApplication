@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -56,41 +57,20 @@ public class CreditCardEntity {
 	@JoinColumn(name="user_id")
 	private CustomerEntity customer;
 
-	@OneToMany(mappedBy="creditCard")
+	@OneToMany(mappedBy="creditCard",cascade=CascadeType.ALL)
 	private Set<TransactionEntity> transaction;
 	
 
-	@OneToMany(mappedBy="creditCard")
+	@OneToMany(mappedBy="creditCard",cascade=CascadeType.ALL)
 	private Set<StatementEntity> statement;
 
-	@OneToMany(mappedBy="card")
+	@OneToMany(mappedBy="card",cascade=CascadeType.ALL)
 	private List<PaymentEntity> payments;
 	
 	public CreditCardEntity() {
 		/* Default Constructor */
 	}
 	
-	/**
-	 * @param cardNumber
-	 * @param cardName
-	 * @param cardType
-	 * @param expiryDate
-	 * @param bankName
-	 * @param cvv
-	 */
-//	public CreditCardEntity(String cardNumber, CardName cardName, CardType cardType, LocalDate expiryDate, String bankName,
-//			Integer cvv) {
-//		super();
-//		this.cardNumber = cardNumber;
-//		this.cardName = cardName;
-//		this.cardType = cardType;
-//		this.expiryDate = expiryDate;
-//		this.bankName = bankName;
-//		this.cvv = cvv;
-//	}
-
-	
-
 	public Double getCreditLimit() {
 		return creditLimit;
 	}
@@ -208,17 +188,6 @@ public class CreditCardEntity {
 		this.cardNumber = cardNumber;
 	}
 
-
-	public LocalDate getCardExpiry() {
-		return expiryDate;
-	}
-
-
-	public void setCardExpiry(LocalDate expiryDate) {
-		this.expiryDate = expiryDate;
-	}
-
-
 	public Integer getCvv() {
 		return cvv;
 	}
@@ -270,16 +239,7 @@ public class CreditCardEntity {
 				return false;
 		} else if (!cardType.equals(other.cardType))
 			return false;
-		if (cvv == null) {
-			if (other.cvv != null)
-				return false;
-		} else if (!cvv.equals(other.cvv))
-			return false;
-		if (expiryDate == null) {
-			if (other.expiryDate != null)
-				return false;
-		} else if (!expiryDate.equals(other.expiryDate))
-			return false;
+		
 		return true;
 	}
 

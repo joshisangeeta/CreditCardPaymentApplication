@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.cg.creditcardpayment.exception.UserException;
 import com.cg.creditcardpayment.model.ChangePassword;
+import com.cg.creditcardpayment.model.SignUp;
 import com.cg.creditcardpayment.model.UserModel;
 
 public interface IUserService {
@@ -17,13 +18,13 @@ public interface IUserService {
 	boolean signIn(UserModel user) throws UserException;	
 	boolean signOut(UserModel user);
 	
-	void deleteById(String userId);
+	void deleteById(String userId) throws UserException;
 	
-	UserModel findById(String userId);
+	UserModel findById(String userId) throws UserException;
 	List<UserModel> findAll();
 	
-	boolean changePassword(ChangePassword changePassword);
+	boolean changePassword(ChangePassword changePassword) throws UserException;
 	
-//	UserModel signUp();
+	UserModel signUp(SignUp signUp) throws UserException;
 	
 }

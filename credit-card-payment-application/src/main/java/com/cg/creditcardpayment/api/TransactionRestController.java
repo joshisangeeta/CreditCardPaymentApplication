@@ -3,6 +3,7 @@ package com.cg.creditcardpayment.api;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,14 +31,19 @@ public class TransactionRestController {
 	}
 	
 	@GetMapping("/getTransaction/{transactionId}")
-	public ResponseEntity<TransactionModel> findById(@PathVariable("transactionId") Long transactionId){
-		return ResponseEntity.ok(transactionService.findById(transactionId));
+	public ResponseEntity<TransactionModel> findById(@PathVariable("transactionId") Long transactionId) throws TransactionException{
+		ResponseEntity<TransactionModel> response=null;
+		if(!(transactionService.existsById(transactionId)) || transactionId==null) {
+			response=new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}else {
+			response=new ResponseEntity<>(transactionService.findById(transactionId),HttpStatus.FOUND);
+		}
+		return response;
 	}
 	
 	@PostMapping("/addTransaction")
 	public ResponseEntity<TransactionModel> add(@RequestBody TransactionModel transaction) throws TransactionException {
 		transaction=transactionService.add(transaction);
-		System.out.println(transaction.getDescription()+" ");
 		return ResponseEntity.ok(transaction);
 	}
 	
@@ -45,12 +51,10 @@ public class TransactionRestController {
 	public ResponseEntity<TransactionModel> updateUser(@RequestBody TransactionModel transaction) throws TransactionException{
 		transaction =transactionService.save(transaction);
 		return ResponseEntity.ok(transaction);
-		//new ResponseEntity<>(transaction, HttpStatus.OK);
 	}
 	
 	@GetMapping("/transact/{cardNumber}/{amount}/{description}")
 	public ResponseEntity<TransactionModel> transact(@PathVariable("cardNumber") String cardNumber,@PathVariable("amount") Double amount,@PathVariable("description") String description) throws CreditCardException {
-		System.out.println("Hello"+cardNumber+" "+amount+" "+description);
 		return ResponseEntity.ok(transactionService.transaction(cardNumber, amount, description));
 	}
 	

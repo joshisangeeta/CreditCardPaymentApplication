@@ -20,6 +20,7 @@ import com.cg.creditcardpayment.dao.IStatementRepository;
 import com.cg.creditcardpayment.entity.CreditCardEntity;
 import com.cg.creditcardpayment.entity.CustomerEntity;
 import com.cg.creditcardpayment.entity.StatementEntity;
+import com.cg.creditcardpayment.exception.StatementException;
 import com.cg.creditcardpayment.model.CardName;
 import com.cg.creditcardpayment.model.CardType;
 import com.cg.creditcardpayment.model.StatementModel;
@@ -37,7 +38,7 @@ class StatementServiceTest {
 	@DisplayName("StatementDetails should retrive")
 	void testGetAll() {
 		
-		CreditCardEntity creditCard1=new CreditCardEntity("2568479632140",CardName.VISA,CardType.Gold,LocalDate.parse("2022-10-18"),"SBI",623,10000.0,10000.0,new CustomerEntity());
+		CreditCardEntity creditCard1=new CreditCardEntity("2568479632140",CardName.VISA,CardType.GOLD,LocalDate.parse("2022-10-18"),"SBI",623,10000.0,10000.0,new CustomerEntity());
 		
 		List<StatementEntity> testData=Arrays.asList(new StatementEntity[] {
 				new StatementEntity(1L,25000.0,25000.0,LocalDate.of(2021, 03, 18),LocalDate.of(2021, 04, 8),creditCard1),
@@ -47,8 +48,8 @@ class StatementServiceTest {
 		Mockito.when(statementRepo.findAll()).thenReturn(testData);
 		
 		List<StatementModel> expected=Arrays.asList(new StatementModel[] {
-				new StatementModel(1L,25000.0,25000.0,LocalDate.of(2021, 03, 18),LocalDate.of(2021, 04, 8),creditCard1.getCardNumber()),
-				new StatementModel(2L,25000.0,25000.0,LocalDate.of(2021, 03, 18),LocalDate.of(2021, 04, 8),creditCard1.getCardNumber())
+				new StatementModel(1L,25000.0,25000.0,LocalDate.of(2021, 03, 18),LocalDate.of(2021, 04, 8),creditCard1.getCardNumber(),creditCard1.getCustomer().getName()),
+				new StatementModel(2L,25000.0,25000.0,LocalDate.of(2021, 03, 18),LocalDate.of(2021, 04, 8),creditCard1.getCardNumber(),creditCard1.getCustomer().getName())
 		});
 		
 		List<StatementModel> actual = service.findAll();
@@ -60,12 +61,12 @@ class StatementServiceTest {
 	
 	@Test
 	@DisplayName("get by Id ")
-	void testGetById () {
-		CreditCardEntity creditCard1=new CreditCardEntity("2568479632140",CardName.VISA,CardType.Gold,LocalDate.parse("2022-10-18"),"SBI",623,10000.0,10000.0,new CustomerEntity());
+	void testGetById () throws StatementException {
+		CreditCardEntity creditCard1=new CreditCardEntity("2568479632140",CardName.VISA,CardType.GOLD,LocalDate.parse("2022-10-18"),"SBI",623,10000.0,10000.0,new CustomerEntity());
 		
 		StatementEntity testdata=new StatementEntity(1L,25000.0,25000.0,LocalDate.of(2021, 03, 18),LocalDate.of(2021, 04, 8),creditCard1);
 		
-		StatementModel expected=new StatementModel(1L,25000.0,25000.0,LocalDate.of(2021, 03, 18),LocalDate.of(2021, 04, 8),creditCard1.getCardNumber());
+		StatementModel expected=new StatementModel(1L,25000.0,25000.0,LocalDate.of(2021, 03, 18),LocalDate.of(2021, 04, 8),creditCard1.getCardNumber(),creditCard1.getCustomer().getName());
 				
 		
 		Mockito.when(statementRepo.findById(testdata.getStatementId())).thenReturn(Optional.of(testdata));
@@ -77,7 +78,7 @@ class StatementServiceTest {
 	
 	@Test
 	@DisplayName("get by id return null")
-	void testGetByIdNull() {		
+	void testGetByIdNull() throws StatementException {		
 		
 		Mockito.when(statementRepo.findById(1L)).thenReturn(Optional.empty());
 		

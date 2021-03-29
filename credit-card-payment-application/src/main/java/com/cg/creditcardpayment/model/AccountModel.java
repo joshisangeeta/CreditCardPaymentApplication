@@ -19,14 +19,15 @@ public class AccountModel {
 	
 	@NotNull(message="account type cannot be null")	
 	@NotBlank(message="account type cannot be blank")
-	private String accountType;
+	
+	private AccountType accountType;
 	
 	
 	public AccountModel() {
 		/* Default Constructor */
 	}
 	
-	public AccountModel(String accountNumber, String accountName, Double accountBalance, String accountType) {
+	public AccountModel(String accountNumber, String accountName, Double accountBalance, AccountType accountType) {
 		super();
 		this.accountNumber = accountNumber;
 		this.accountName = accountName;
@@ -58,11 +59,11 @@ public class AccountModel {
 		this.accountBalance = accountBalance;
 	}
 
-	public String getAccountType() {
+	public AccountType getAccountType() {
 		return accountType;
 	}
 
-	public void setAccountType(String accountType) {
+	public void setAccountType(AccountType accountType) {
 		this.accountType = accountType;
 	}
 

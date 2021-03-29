@@ -19,8 +19,6 @@ import com.cg.creditcardpayment.model.TransactionStatus;
 @Service
 public class TransactionServiceImpl implements ITransactionService {
 	
-	
-	private static Long transactionId=100L; 
 	@Autowired
 	private ITransactionRepository transactionRepo;
 	
@@ -33,12 +31,7 @@ public class TransactionServiceImpl implements ITransactionService {
 	public TransactionServiceImpl() {
 		
 	}
-	
-	
-	/**
-	 * @param transactionRepo
-	 * @param parser
-	 */
+
 	public TransactionServiceImpl(ITransactionRepository transactionRepo) {
 		super();
 		this.transactionRepo = transactionRepo;
@@ -82,6 +75,9 @@ public class TransactionServiceImpl implements ITransactionService {
 
 	@Override
 	public TransactionModel save(TransactionModel transaction) throws TransactionException {
+		if(transaction==null) {
+			throw new TransactionException("transaction details cannot be null");
+		}
 		return parser.parse(transactionRepo.save(parser.parse(transaction)));
 	}
 
@@ -91,48 +87,62 @@ public class TransactionServiceImpl implements ITransactionService {
 	}
 
 	@Override
-	public void deleteById(Long transactionId) {
+	public void deleteById(Long transactionId) throws TransactionException {
+		if(transactionId==null) {
+			throw new TransactionException("transaction Id cannot be Null");
+		}else if(!transactionRepo.existsById(transactionId)) {
+			throw new TransactionException("Transaction with Transaction Id "+transactionId+" Does not Exists");
+		}
 		transactionRepo.deleteById(transactionId);
-		
 	}
 
 	@Override
-	public TransactionModel findById(Long transactionId) {
+	public TransactionModel findById(Long transactionId) throws TransactionException {
+		if(transactionId==null) {
+			throw new TransactionException("transaction Id cannot be Null");
+		}else if(!transactionRepo.existsById(transactionId)) {
+			throw new TransactionException("Transaction with Transaction Id "+transactionId+" Does not Exists");
+		}
 		return parser.parse(transactionRepo.findById(transactionId).orElse(null));
 	}
 
 	@Override
-	public boolean existsById(Long transactionId) {
+	public boolean existsById(Long transactionId) throws TransactionException {
+		if(transactionId==null) {
+			throw new TransactionException("transaction Id can't be Null");
+		}
 		return transactionRepo.existsById(transactionId);
 	}
 
 
 	@Override
 	public TransactionModel transaction(String cardNumber,Double amount,String discription) throws CreditCardException {
-		CreditCardEntity card=creditCardRepo.findById(cardNumber).orElse(null);
-		if(card==null || card.getExpiryDate().isBefore(LocalDate.now())) {
-			throw new CreditCardException("card "+card.getCardNumber()+" is invalid");
-		}else {
-			TransactionModel transact=new TransactionModel();
-			transact.setTransactionId(transactionId++);
-			transact.setCardNumber(cardNumber);
-			transact.setTransactionDate(LocalDate.now());
-			transact.setTransactionTime(LocalTime.now());
-			transact.setDescription(discription);
-			System.out.println(cardNumber+" "+amount);
-			if(!(amount+card.getUsedLimit()>=card.getCreditLimit())) {
-				transact.setAmount(amount);
-				card.setUsedLimit(amount+card.getUsedLimit());
-				transact.setStatus(TransactionStatus.SUCCESSFUL);
-			}else {
-				transact.setAmount(0.0);
-				card.setUsedLimit(card.getUsedLimit());
-				transact.setStatus(TransactionStatus.FAILED);
-			}
-			transact=parser.parse(transactionRepo.save(parser.parse(transact)));
-			return transact;
+		if(cardNumber==null) {
+			throw new CreditCardException("Card Number cannot be Null");
 		}
-		
+		CreditCardEntity card=creditCardRepo.findById(cardNumber).orElse(null);
+		if(card==null) {
+			throw new CreditCardException("Card Details should not be Null");
+		}
+		if(card.getExpiryDate().isBefore(LocalDate.now())) {
+			throw new CreditCardException("card "+card.getCardNumber()+" is invalid");
+		}
+		TransactionModel transact=new TransactionModel();
+		transact.setTransactionId(0L);
+		transact.setCardNumber(cardNumber);
+		transact.setTransactionDate(LocalDate.now());
+		transact.setTransactionTime(LocalTime.now());
+		transact.setDescription(discription);
+		if(amount+card.getUsedLimit()<card.getCreditLimit()) {
+			transact.setAmount(amount);
+			card.setUsedLimit(amount+card.getUsedLimit());
+			transact.setStatus(TransactionStatus.SUCCESSFUL);
+		}else {
+			transact.setAmount(0.0);
+			card.setUsedLimit(card.getUsedLimit());
+			transact.setStatus(TransactionStatus.FAILED);
+		}
+		transact=parser.parse(transactionRepo.save(parser.parse(transact)));
+		return transact;
 	}
-
 }

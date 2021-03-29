@@ -12,6 +12,7 @@ import com.cg.creditcardpayment.dao.ICreditCardRepository;
 import com.cg.creditcardpayment.dao.IStatementRepository;
 import com.cg.creditcardpayment.entity.CreditCardEntity;
 import com.cg.creditcardpayment.entity.TransactionEntity;
+import com.cg.creditcardpayment.exception.CreditCardException;
 import com.cg.creditcardpayment.exception.StatementException;
 import com.cg.creditcardpayment.model.StatementModel;
 
@@ -19,7 +20,6 @@ import com.cg.creditcardpayment.model.StatementModel;
 @Service
 public class StatementServiceImpl implements IStatementService {
 	
-	private static Long statementId=101L;
 	@Autowired
 	private IStatementRepository statementRepo;
 
@@ -53,6 +53,9 @@ public class StatementServiceImpl implements IStatementService {
 
 	@Override
 	public StatementModel save(StatementModel statement) throws StatementException {
+		if(statement==null) {
+			throw new StatementException("Statement cannot be null");
+		}
 		return parser.parse(statementRepo.save(parser.parse(statement)));
 	}
 
@@ -62,68 +65,116 @@ public class StatementServiceImpl implements IStatementService {
 	}
 
 	@Override
-	public void deleteById(Long statementId) {
+	public void deleteById(Long statementId) throws StatementException {
+		if(statementId==null) {
+			throw new StatementException("Statement Id cannot be null");
+		}else if(!statementRepo.existsById(statementId)) {
+			throw new StatementException("Statement id "+statementId+" Does not exists");
+		}
 		statementRepo.deleteById(statementId);
 		
 	}
 
 	@Override
-	public StatementModel findById(Long statementId) {
+	public StatementModel findById(Long statementId) throws StatementException {
+		if(statementId==null) {
+			throw new StatementException("Statement Id cannot be null");
+		}else if(!statementRepo.existsById(statementId)) {
+			throw new StatementException("Statement id "+statementId+" Does not exists");
+		}
 		return parser.parse(statementRepo.findById(statementId).orElse(null));
 	}
 
 	@Override
-	public boolean existsById(Long statementId) {
-
+	public boolean existsById(Long statementId) throws StatementException {
+		if(statementId==null) {
+			throw new StatementException("Statement Id cannot be Null");
+		}
 		return statementRepo.existsById(statementId);
 	}
 
 	@Override
-	public StatementModel getBilledStatement(String cardNumber) {
+	public StatementModel getBilledStatement(String cardNumber) throws CreditCardException, StatementException {
+		if(cardNumber==null) {
+			throw new CreditCardException("Card number cannot be null");
+		}
 		StatementModel bill=new StatementModel();
 		CreditCardEntity card=creditCardRepo.findById(cardNumber).orElse(null);
-		if(card!=null && card.getCardExpiry().isAfter(LocalDate.now())) {
-			bill.setStatementId(statementId++);
-			bill.setBillDate(LocalDate.now());
-			bill.setCardNumber(cardNumber);
-			bill.setDueDate(LocalDate.now().plusDays(20));
-			Double amount=0.0;
-			
-			Set<TransactionEntity> transaction =card.getTransaction();			
-			
-			amount=transaction.stream().filter(trans->trans.getTransactionDate().plusDays(30).isAfter(LocalDate.now())).mapToDouble(amo -> amo.getAmount()).sum();
-			bill.setDueAmount(amount);
-			bill.setBillAmount(amount);
-			statementRepo.save(parser.parse(bill));
-			return bill;
+		if(card==null) {
+			throw new CreditCardException("Credit card "+cardNumber+" Does not Exists");
 		}
-		return null;
+		if(card.getExpiryDate().isBefore(LocalDate.now())) {
+			throw new CreditCardException("Credit Card is Expired, Please request new Credit Card");
+		}
+		bill.setStatementId(0L);
+		bill.setBillDate(LocalDate.now());
+		
+		/*
+		 * bill.setBillDate(LocalDate.of(LocalDate.now().getYear(),
+		 * LocalDate.now().getMonthValue(), 18));
+		 */
+		bill.setCardNumber(cardNumber);
+		bill.setDueDate(bill.getBillDate().plusDays(20));
+				
+		Set<TransactionEntity> transaction =card.getTransaction();			
+		
+		Double amount=transaction.stream().filter(trans->trans.getTransactionDate().plusDays(30).isAfter(LocalDate.now())).mapToDouble( amo -> amo.getAmount()).sum();
+		bill.setDueAmount(amount);
+		bill.setBillAmount(amount);
+		LocalDate lastBillDate=statementRepo.findAll().get(statementRepo.findAll().size()-1).getBillDate();
+		StatementModel billStatement=new StatementModel();
+		if(lastBillDate.getDayOfMonth()!=LocalDate.now().getDayOfMonth()) {
+			billStatement=parser.parse(statementRepo.findAll().get(statementRepo.findAll().size()-1));
+		}else {
+			billStatement = parser.parse(statementRepo.save(parser.parse(bill)));
+		}
+		return billStatement;
 	}
 
 	@Override
-	public StatementModel getUnBilledStatement(String cardNumber) {
+	public StatementModel getUnBilledStatement(String cardNumber) throws CreditCardException {
+		if(cardNumber==null) {
+			throw new CreditCardException("Card Number cannot be Null");
+		}
 		StatementModel unBill=new StatementModel();
-		unBill.setStatementId(statementId);
+		unBill.setStatementId(0L);
 		unBill.setCardNumber(cardNumber);
 		LocalDate lastBillDate=statementRepo.findAll().get(statementRepo.findAll().size()-1).getDueDate();
 		unBill.setBillDate(lastBillDate.plusDays(30));
 		unBill.setDueDate(unBill.getBillDate().plusDays(20));
-		Double amount=0.0;
-		Set<TransactionEntity> transaction =creditCardRepo.findById(cardNumber).orElse(null).getTransaction();	
 		
-		amount=transaction.stream().filter(trans->trans.getTransactionDate().isAfter(lastBillDate.plusDays(1))).mapToDouble(amo -> amo.getAmount()).sum();
+		CreditCardEntity credit=creditCardRepo.findById(cardNumber).orElse(null);
+		
+		if(credit==null) {
+			throw new CreditCardException("Credit card"+cardNumber+" does not Exists");
+		}
+		Set<TransactionEntity> transaction =credit.getTransaction();	
+		
+		Double amount=transaction.stream().filter(trans->trans.getTransactionDate().isAfter(lastBillDate.plusDays(1))).mapToDouble(amo -> amo.getAmount()).sum();
 		
 		unBill.setDueAmount(amount);
 		unBill.setBillAmount(amount);
+		unBill=parser.parse(statementRepo.save(parser.parse(unBill)));
+		statementRepo.deleteById(unBill.getStatementId());
 		return unBill;
 	}
 
 	@Override
-	public List<StatementModel> statementHistory(String cardNumber) {
+	public List<StatementModel> statementHistory(String cardNumber) throws CreditCardException {
+		if(cardNumber==null) {
+			throw new CreditCardException("Card Number cannot be Null");
+		}
 		CreditCardEntity card=creditCardRepo.findById(cardNumber).orElse(null);
-		
-		List<StatementModel> statementHistory=card.getStatement().stream().map(parser::parse).collect(Collectors.toList());
-		return statementHistory;
+		if(card==null) {
+			throw new CreditCardException("Credit Card "+cardNumber+" doesnot Exists");
+		}
+		return card.getStatement().stream().map(parser::parse).collect(Collectors.toList());
+	}
+
+	@Override
+	public StatementModel findByBillDate(LocalDate billDate) {
+		// TODO Auto-generated method stub
+		return parser.parse(statementRepo.findByBillDate(billDate));
 	}
 
 }

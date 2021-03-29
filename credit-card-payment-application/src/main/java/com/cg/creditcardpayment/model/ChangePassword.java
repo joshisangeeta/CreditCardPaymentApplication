@@ -3,7 +3,7 @@ package com.cg.creditcardpayment.model;
 public class ChangePassword {
 	private String userId;
 	private String currentPassword;
-	private String changePassword;
+	private String newPassword;
 	private String confirmPassword;
 	public String getUserId() {
 		return userId;
@@ -17,11 +17,11 @@ public class ChangePassword {
 	public void setCurrentPassword(String currentPassword) {
 		this.currentPassword = currentPassword;
 	}
-	public String getChangePassword() {
-		return changePassword;
+	public String getNewPassword() {
+		return newPassword;
 	}
-	public void setChangePassword(String changePassword) {
-		this.changePassword = changePassword;
+	public void setNewPassword(String newPassword) {
+		this.newPassword = newPassword;
 	}
 	public String getConfirmPassword() {
 		return confirmPassword;
@@ -39,17 +39,17 @@ public class ChangePassword {
 	public ChangePassword() {
 		
 	}
-	public ChangePassword(String userId, String currentPassword, String changePassword, String confirmPassword) {
+	public ChangePassword(String userId, String currentPassword, String newPassword, String confirmPassword) {
 		super();
 		this.userId = userId;
 		this.currentPassword = currentPassword;
-		this.changePassword = changePassword;
+		this.newPassword = newPassword;
 		this.confirmPassword = confirmPassword;
 	}
 	@Override
 	public String toString() {
 		return String.format("ChangePassword [userId=%s, currentPassword=%s, changePassword=%s, confirmPassword=%s]",
-				userId, currentPassword, changePassword, confirmPassword);
+				userId, currentPassword, newPassword, confirmPassword);
 	}
 	
 	

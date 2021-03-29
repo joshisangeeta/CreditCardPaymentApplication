@@ -3,13 +3,35 @@ GET: /users/getAllUsers
 GET: /users/getUser/{userId}
 
 POST: /users/addUser
+{
+    "userId":"U118",
+    "password":"User@123",
+    "role":"USER"
+}
 
 DELETE: /users/deleteUser/{userId}
 
 POST: /users/signIn
+{
+    "userId":"U118",
+    "password":"Naveen@123"
+}
+
+PUT: /user/signUp
+{
+    "userId":"U118",
+    "key":"User@123",
+    "createPassword":"Naveen@2k",
+    "confirmPassword":"Naveen@2k"
+}
 
 PUT: /users/changePassword
-
+{
+    "userId":"U118",
+    "currentPassword":"Naveen@2k",
+    "changePassword":"Naveen@123",
+    "confirmPassword":"Naveen@123"
+}
 ========================================
 
 
@@ -17,17 +39,22 @@ GET: /customers/getAllCustomers
 
 GET: /customers/getCustomer/{userId}
 
-POST: /customers/addCustomer
-
-PUT: /customers/updateCustomer
-
-POST: /customers/addAccount/{customerId}
-
-GET: /customers/getAccounts/{customerId}
-
-POST: /customers/addCreditCard/{customerId}
-
-GET: /customers/getCreditCards/{customerId}
+POST: /customers/addCustomer/{userId}
+    {
+        "userName": "Venkata Sai Reddy",
+        "email": "venkatasai148@gmail.com",
+        "contactNo": "9207388239",
+        "dob": "1999-10-18",
+        "address": {
+            "doorNo": "10-10A",
+            "street": "kvb",
+            "area": "Jubli hills",
+            "city": "Hydrabad",
+            "state": "Telangana",
+            "pincode": 500055
+        }
+    }
+PUT: /customers/updateCustomer/{userId}
 
 
 ===================================================
@@ -36,7 +63,11 @@ GET: /accounts/getAllAccounts
 
 GET: /accounts/getAccount/{accountnumber}
 
+GET: /accounts/getAllAccounts/{customerId}
+
 POST: /accounts/addAccount
+
+POST: /accounts/addAccount/{customerId}
 
 DELETE: /accounts/deleteAccount/{accountnumber}
 
@@ -51,6 +82,10 @@ GET: /creditcards/getAllCreditCards
 GET: /creditcards/getCreditCard/{cardNumber}
 
 POST: /creditcards/addCreditCard
+
+POST: /creditcards/addCreditCard/{customerId}
+
+GET: /creditcards/getAllCreditCards/{customerId}
 
 DELETE: /creditcards/deleteCreditCard/{cardNumber}
 

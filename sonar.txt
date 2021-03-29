@@ -1,0 +1,4 @@
+ac3e7d0c540c15624e1182868e979c9bd26fdb09
+
+
+gradlew sonarqube -Dsonar.projectKey=CreditCardPayment -Dsonar.host.url=http://localhost:9000 -Dsonar.login=ac3e7d0c540c15624e1182868e979c9bd26fdb09

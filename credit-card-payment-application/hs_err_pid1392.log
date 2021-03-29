@@ -1,0 +1,180 @@
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Native memory allocation (malloc) failed to allocate 1048576 bytes for AllocateHeap
+# Possible reasons:
+#   The system is out of physical RAM or swap space
+#   The process is running with CompressedOops enabled, and the Java Heap may be blocking the growth of the native heap
+# Possible solutions:
+#   Reduce memory load on the system
+#   Increase physical memory or swap space
+#   Check if swap backing store is full
+#   Decrease Java heap size (-Xmx/-Xms)
+#   Decrease number of Java threads
+#   Decrease Java thread stack sizes (-Xss)
+#   Set larger code cache with -XX:ReservedCodeCacheSize=
+#   JVM is running with Unscaled Compressed Oops mode in which the Java heap is
+#     placed in the first 4GB address space. The Java Heap base address is the
+#     maximum limit for the native heap growth. Please use -XX:HeapBaseMinAddress
+#     to set the Java Heap base and to place the Java Heap above 4GB virtual address.
+# This output file may be truncated or incomplete.
+#
+#  Out of Memory Error (memory/allocation.inline.hpp:61), pid=1392, tid=0x0000000000003900
+#
+# JRE version:  (8.0_281-b09) (build )
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (25.281-b09 mixed mode windows-amd64 compressed oops)
+# Failed to write core dump. Minidumps are not enabled by default on client versions of Windows
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x00000199f4b3f800):  JavaThread "Unknown thread" [_thread_in_vm, id=14592, stack(0x0000000100600000,0x0000000100700000)]
+
+Stack: [0x0000000100600000,0x0000000100700000]
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [jvm.dll+0x32e5b9]
+V  [jvm.dll+0x275012]
+V  [jvm.dll+0x275cbd]
+V  [jvm.dll+0x26c6f5]
+V  [jvm.dll+0x509d]
+V  [jvm.dll+0x3c8d4d]
+V  [jvm.dll+0x3c9ba1]
+V  [jvm.dll+0x3c5a67]
+V  [jvm.dll+0xfcaaf]
+V  [jvm.dll+0x209a1b]
+V  [jvm.dll+0x2383d7]
+V  [jvm.dll+0x162566]
+C  [java.exe+0x2312]
+C  [java.exe+0x15f54]
+C  [KERNEL32.DLL+0x17034]
+C  [ntdll.dll+0x52651]
+
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+
+Other Threads:
+
+=>0x00000199f4b3f800 (exited) JavaThread "Unknown thread" [_thread_in_vm, id=14592, stack(0x0000000100600000,0x0000000100700000)]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+heap address: 0x00000000fc000000, size: 64 MB, Compressed Oops mode: 32-bit
+Narrow klass base: 0x000001998f000000, Narrow klass shift: 0
+Compressed class space size: 1073741824 Address: 0x000001998f000000
+
+Heap:
+ PSYoungGen      total 18944K, used 327K [0x00000000feb00000, 0x0000000100000000, 0x0000000100000000)
+  eden space 16384K, 2% used [0x00000000feb00000,0x00000000feb51ec8,0x00000000ffb00000)
+  from space 2560K, 0% used [0x00000000ffd80000,0x00000000ffd80000,0x0000000100000000)
+  to   space 2560K, 0% used [0x00000000ffb00000,0x00000000ffb00000,0x00000000ffd80000)
+ ParOldGen       total 44032K, used 0K [0x00000000fc000000, 0x00000000feb00000, 0x00000000feb00000)
+  object space 44032K, 0% used [0x00000000fc000000,0x00000000fc000000,0x00000000feb00000)
+ Metaspace       used 777K, capacity 4480K, committed 4480K, reserved 1056768K
+  class space    used 76K, capacity 384K, committed 384K, reserved 1048576K
+
+Card table byte_map: [0x00000199f4da0000,0x00000199f4dd0000] byte_map_base: 0x00000199f45c0000
+
+Marking Bits: (ParMarkBitMap*) 0x0000000066a26ff0
+ Begin Bits: [0x00000199f6960000, 0x00000199f6a60000)
+ End Bits:   [0x00000199f6a60000, 0x00000199f6b60000)
+
+Polling page: 0x00000199f4d70000
+
+CodeCache: size=245760Kb used=329Kb max_used=329Kb free=245431Kb
+ bounds [0x0000019980000000, 0x0000019980270000, 0x000001998f000000]
+ total_blobs=58 nmethods=0 adapters=38
+ compilation: enabled
+
+Compilation events (0 events):
+No events
+
+GC Heap History (0 events):
+No events
+
+Deoptimization events (0 events):
+No events
+
+Classes redefined (0 events):
+No events
+
+Internal exceptions (0 events):
+No events
+
+Events (10 events):
+Event: 0.102 loading class java/lang/Short
+Event: 0.102 loading class java/lang/Short done
+Event: 0.102 loading class java/lang/Integer
+Event: 0.102 loading class java/lang/Integer done
+Event: 0.102 loading class java/lang/Long
+Event: 0.102 loading class java/lang/Long done
+Event: 0.103 loading class java/lang/NullPointerException
+Event: 0.103 loading class java/lang/NullPointerException done
+Event: 0.103 loading class java/lang/ArithmeticException
+Event: 0.103 loading class java/lang/ArithmeticException done
+
+
+Dynamic libraries:
+0x00007ff6e6320000 - 0x00007ff6e6367000 	C:\Program Files\Java\jdk1.8.0_281\bin\java.exe
+0x00007ffe4a530000 - 0x00007ffe4a725000 	C:\WINDOWS\SYSTEM32\ntdll.dll
+0x00007ffe49f50000 - 0x00007ffe4a00d000 	C:\WINDOWS\System32\KERNEL32.DLL
+0x00007ffe48080000 - 0x00007ffe48349000 	C:\WINDOWS\System32\KERNELBASE.dll
+0x00007ffe49250000 - 0x00007ffe492fc000 	C:\WINDOWS\System32\ADVAPI32.dll
+0x00007ffe49300000 - 0x00007ffe4939e000 	C:\WINDOWS\System32\msvcrt.dll
+0x00007ffe4a260000 - 0x00007ffe4a2fc000 	C:\WINDOWS\System32\sechost.dll
+0x00007ffe48590000 - 0x00007ffe486bb000 	C:\WINDOWS\System32\RPCRT4.dll
+0x00007ffe48790000 - 0x00007ffe48930000 	C:\WINDOWS\System32\USER32.dll
+0x00007ffe484b0000 - 0x00007ffe484d2000 	C:\WINDOWS\System32\win32u.dll
+0x00007ffe49de0000 - 0x00007ffe49e0a000 	C:\WINDOWS\System32\GDI32.dll
+0x00007ffe47dd0000 - 0x00007ffe47edb000 	C:\WINDOWS\System32\gdi32full.dll
+0x00007ffe47fe0000 - 0x00007ffe4807d000 	C:\WINDOWS\System32\msvcp_win.dll
+0x00007ffe48350000 - 0x00007ffe48450000 	C:\WINDOWS\System32\ucrtbase.dll
+0x00007ffe3af10000 - 0x00007ffe3b1aa000 	C:\WINDOWS\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.19041.844_none_ca00b6081b84eb1d\COMCTL32.dll
+0x00007ffe4a010000 - 0x00007ffe4a040000 	C:\WINDOWS\System32\IMM32.DLL
+0x00007ffe29760000 - 0x00007ffe29775000 	C:\Program Files\Java\jdk1.8.0_281\jre\bin\vcruntime140.dll
+0x00007ffe296c0000 - 0x00007ffe2975b000 	C:\Program Files\Java\jdk1.8.0_281\jre\bin\msvcp140.dll
+0x0000000066240000 - 0x0000000066a9f000 	C:\Program Files\Java\jdk1.8.0_281\jre\bin\server\jvm.dll
+0x00007ffe49f40000 - 0x00007ffe49f48000 	C:\WINDOWS\System32\PSAPI.DLL
+0x00007ffe3bcb0000 - 0x00007ffe3bcd7000 	C:\WINDOWS\SYSTEM32\WINMM.dll
+0x00007ffe2e580000 - 0x00007ffe2e589000 	C:\WINDOWS\SYSTEM32\WSOCK32.dll
+0x00007ffe3ee10000 - 0x00007ffe3ee1a000 	C:\WINDOWS\SYSTEM32\VERSION.dll
+0x00007ffe4a040000 - 0x00007ffe4a0ab000 	C:\WINDOWS\System32\WS2_32.dll
+0x00007ffe46550000 - 0x00007ffe46562000 	C:\WINDOWS\SYSTEM32\kernel.appcore.dll
+0x00007ffe296b0000 - 0x00007ffe296c0000 	C:\Program Files\Java\jdk1.8.0_281\jre\bin\verify.dll
+0x00007ffe29680000 - 0x00007ffe296ab000 	C:\Program Files\Java\jdk1.8.0_281\jre\bin\java.dll
+0x00007ffe29660000 - 0x00007ffe29678000 	C:\Program Files\Java\jdk1.8.0_281\jre\bin\zip.dll
+0x00007ffe45ad0000 - 0x00007ffe45cb4000 	C:\WINDOWS\SYSTEM32\dbghelp.dll
+0x00007ffe484e0000 - 0x00007ffe48560000 	C:\WINDOWS\System32\bcryptPrimitives.dll
+
+VM Arguments:
+jvm_args: -Xmx64m -Xms64m -Dorg.gradle.appname=gradlew 
+java_command: org.gradle.wrapper.GradleWrapperMain sonarqube -Dsonar.projectKey=CreditCardPayment -Dsonar.host.url=http://localhost:9000 -Dsonar.login=ac3e7d0c540c15624e1182868e979c9bd26fdb09
+java_class_path (initial): C:\Users\venka\Desktop\project\project\credit-card-payment-application\\gradle\wrapper\gradle-wrapper.jar
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+JAVA_HOME=C:\Program Files\Java\jdk1.8.0_281
+CLASSPATH=C:\Users\venka\Desktop\project\project\credit-card-payment-application\\gradle\wrapper\gradle-wrapper.jar
+PATH=C:/Users/venka/Desktop/capgemini/remote intern/downloads/spring-tool-suite-4-4.9.1.CI-B195-e4.19.0-win32.win32.x86_64/sts-4.9.1.CI-B195//plugins/org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64_15.0.1.v20201027-0507/jre/bin/server;C:/Users/venka/Desktop/capgemini/remote intern/downloads/spring-tool-suite-4-4.9.1.CI-B195-e4.19.0-win32.win32.x86_64/sts-4.9.1.CI-B195//plugins/org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64_15.0.1.v20201027-0507/jre/bin;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;D:\softwares\bin;C:\Users\venka\AppData\Local\Programs\Python\Python37\;C:\Users\venka\AppData\Local\Programs\Python\Python37\Scripts;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\gradle-6.8.3-bin\gradle-6.8.3;C:\Users\venka\Anaconda3;C:\Users\venka\Anaconda3\Library\mingw-w64\bin;C:\Users\venka\Anaconda3\Library\usr\bin;C:\Users\venka\Anaconda3\Library\bin;C:\Users\venka\Anaconda3\Scripts;C:\Users\venka\AppData\Local\Programs\Python\Python37\Scripts\;C:\Users\venka\AppData\Local\Programs\Python\Python37\;C:\Users\venka\AppData\Local\Microsoft\WindowsApps;D:\reddr\miktex\bin\x64\;C:\Program Files\Java\jdk1.8.0_281\bin;;C:\Users\venka\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\venka\AppData\Roaming\npm;C:\Users\venka\Desktop\capgemini\remote intern\downloads\spring-tool-suite-4-4.9.1.CI-B195-e4.19.0-win32.win32.x86_64\sts-4.9.1.CI-B195;
+USERNAME=venka
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 158 Stepping 10, GenuineIntel
+
+
+
+---------------  S Y S T E M  ---------------
+
+OS: Windows 10.0 , 64 bit Build 19041 (10.0.19041.804)
+
+CPU:total 12 (initial active 12) (6 cores per cpu, 2 threads per core) family 6 model 158 stepping 10, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, avx2, aes, clmul, erms, 3dnowpref, lzcnt, ht, tsc, tscinvbit, bmi1, bmi2, adx
+
+Memory: 4k page, physical 8305908k(328904k free), swap 33471732k(5652k free)
+
+vm_info: Java HotSpot(TM) 64-Bit Server VM (25.281-b09) for windows-amd64 JRE (1.8.0_281-b09), built on Dec  9 2020 13:54:07 by "" with MS VC++ 15.9 (VS2017)
+
+time: Mon Mar 29 17:58:39 2021
+timezone: India Standard Time
+elapsed time: 0.150521 seconds (0d 0h 0m 0s)
+

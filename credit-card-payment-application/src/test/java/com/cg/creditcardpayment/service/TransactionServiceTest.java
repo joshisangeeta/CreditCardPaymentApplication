@@ -76,8 +76,9 @@ class TransactionServiceTest {
 		
 		
 		Mockito.when(transactionRepo.findById(testdata.getTransactionId())).thenReturn(Optional.of(testdata));
-	
-		TransactionModel actual=service.getParser().parse(transactionRepo.findById(testdata.getTransactionId()).orElse(null));
+		Mockito.when(transactionRepo.existsById(testdata.getTransactionId())).thenReturn(true);
+		
+		TransactionModel actual=service.findById(testdata.getTransactionId());
 		
 		assertEquals(expected,actual);
 	}
@@ -87,8 +88,9 @@ class TransactionServiceTest {
 	void testGetByIdNull() throws TransactionException {		
 		
 		Mockito.when(transactionRepo.findById(1L)).thenReturn(Optional.empty());
+		Mockito.when(transactionRepo.existsById(1L)).thenReturn(true);
 		
-		TransactionModel actual = service.getParser().parse(transactionRepo.findById(1L).orElse(null));
+		TransactionModel actual = service.findById(1L);
 		assertNull(actual);
 	}
 	

@@ -70,7 +70,8 @@ class StatementServiceTest {
 				
 		
 		Mockito.when(statementRepo.findById(testdata.getStatementId())).thenReturn(Optional.of(testdata));
-	
+		Mockito.when(statementRepo.existsById(testdata.getStatementId())).thenReturn(true);
+		
 		StatementModel actual=service.findById(testdata.getStatementId());
 		
 		assertEquals(expected,actual);
@@ -81,6 +82,7 @@ class StatementServiceTest {
 	void testGetByIdNull() throws StatementException {		
 		
 		Mockito.when(statementRepo.findById(1L)).thenReturn(Optional.empty());
+		Mockito.when(statementRepo.existsById(1L)).thenReturn(true);
 		
 		StatementModel actual = service.findById(1L);
 		assertNull(actual);

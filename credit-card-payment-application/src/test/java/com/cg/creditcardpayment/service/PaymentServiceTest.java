@@ -1,7 +1,7 @@
 package com.cg.creditcardpayment.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -71,6 +71,7 @@ class PaymentServiceTest {
 		
 		
 		Mockito.when(paymentRepo.findById(testdata.getPaymentId())).thenReturn(Optional.of(testdata));
+		Mockito.when(paymentRepo.existsById(testdata.getPaymentId())).thenReturn(true);
 	
 		PaymentModel actual=service.findById(testdata.getPaymentId());
 		
@@ -81,11 +82,10 @@ class PaymentServiceTest {
 	@DisplayName("get by id return null")
 	void testGetByIdNull() throws PaymentException {		
 		
-//		Mockito.when(paymentRepo.findById(1L)).thenReturn(Optional.empty());
-		
-//		PaymentModel actual = service.findById(1L);
-//		assertNull(actual);
-		assertThrows(PaymentException.class,()->{service.findById(1L);});
+		Mockito.when(paymentRepo.findById(1L)).thenReturn(Optional.empty());
+		Mockito.when(paymentRepo.existsById(1L)).thenReturn(true);
+		PaymentModel actual = service.findById(1L);
+		assertNull(actual);
 	}
 	
 	

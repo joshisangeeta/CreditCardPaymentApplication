@@ -2,7 +2,6 @@ package com.cg.creditcardpayment.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -72,8 +71,10 @@ class CreditCardServiceTest {
 		CreditCardModel expected=new CreditCardModel("2568479632140",CardName.VISA,CardType.GOLD,LocalDate.parse("2022-10-18"),"SBI",623,10000.0,10000.0,new CustomerEntity().getUserId());
 		
 		Mockito.when(creditCardRepo.findById(testdata.getCardNumber())).thenReturn(Optional.of(testdata));
+		Mockito.when(creditCardRepo.existsById(testdata.getCardNumber())).thenReturn(true);
+		
 	
-		CreditCardModel actual=service.getParser().parse(creditCardRepo.findById(testdata.getCardNumber()).orElse(null));
+		CreditCardModel actual=service.findById(testdata.getCardNumber());
 		
 		assertEquals(expected,actual);
 	}
@@ -120,17 +121,17 @@ class CreditCardServiceTest {
 
 	
 	@Test
-	@DisplayName("get by id throw Exception")
+	@DisplayName("get by id rturn null")
 	void testGetByIdNull() throws CreditCardException {		
 		
-		String Expected="Card Number425631257892 does not exists";
-//		Mockito.when(creditCardRepo.findById("425631257892")).thenReturn(Optional.empty()));
+		Mockito.when(creditCardRepo.findById("425631257892")).thenReturn(Optional.empty());
+		Mockito.when(creditCardRepo.existsById("425631257892")).thenReturn(true);
 		
-		CreditCardException exp=assertThrows(CreditCardException.class,()->{service.findById("425631257892");});
+		CreditCardModel actual = service.findById("425631257892");
 		
 		
 		
-		assertEquals(Expected,exp.getMessage());
+		assertNull(actual);
 	
 	}
 	

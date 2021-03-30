@@ -51,8 +51,6 @@ class CustomerServiceTest {
 		
 		List<CustomerModel> actual = service.findAll();
 		
-//		System.out.println(actual.hashCode() + "\n\n"+actual.toString()+"\n\n"+expected.hashCode()+"\n\n"+expected.toString());
-
 		assertEquals(expected,actual);
 
 	}
@@ -90,8 +88,11 @@ class CustomerServiceTest {
 		assertEquals(expected,added);
 		
 		Mockito.doNothing().when(customerRepo).deleteById(added.getUserId());
-
+		Mockito.when(customerRepo.existsById(added.getUserId())).thenReturn(true);
+		
 		service.deleteById(added.getUserId());
+		
+		Mockito.when(customerRepo.existsById(added.getUserId())).thenReturn(false);
 		boolean test=service.existsById(added.getUserId());
 		
 		assertFalse(test);
@@ -108,7 +109,8 @@ class CustomerServiceTest {
 		
 		
 		Mockito.when(customerRepo.findById(testdata.getUserId())).thenReturn(Optional.of(testdata));
-	
+		Mockito.when(customerRepo.existsById(testdata.getUserId())).thenReturn(true);
+		
 		CustomerModel actual=service.findById(testdata.getUserId());
 		
 		assertEquals(expected,actual);
@@ -121,6 +123,7 @@ class CustomerServiceTest {
 		CustomerEntity testdata=new CustomerEntity("U107","Venkata","venkatasai1479@gmail.com","7207388240",LocalDate.parse("1999-10-18"),address1);
 		
 		Mockito.when(customerRepo.findById(testdata.getUserId())).thenReturn(Optional.empty());
+		Mockito.when(customerRepo.existsById(testdata.getUserId())).thenReturn(true);
 		
 		CustomerModel actual = service.findById(testdata.getUserId());
 		assertNull(actual);
@@ -161,6 +164,7 @@ class CustomerServiceTest {
 	void testGetByIdNull() throws CustomerException {		
 		
 		Mockito.when(customerRepo.findById("U101")).thenReturn(Optional.empty());
+		Mockito.when(customerRepo.existsById("U101")).thenReturn(true);
 		
 		CustomerModel actual = service.findById("U101");
 		assertNull(actual);

@@ -75,16 +75,16 @@ class AccountServiceTest {
 		AccountEntity account1=new AccountEntity("42356879562","Venkata sai",50000.0,AccountType.SAVINGS);
 		
 		Mockito.when(accountRepo.save(account1)).thenReturn(account1);
+		
 
 		AccountModel added = service.add(service.getParser().parse(account1));
 		
 		Mockito.doNothing().when(accountRepo).deleteById(added.getAccountNumber());
-
-		Mockito.verify(accountRepo).deleteById(added.getAccountNumber());
-		service.deleteById(service.getParser().parse(added).getAccountNumber());
-//		boolean test=service.existsById(added.getAccountNumber());
-//		
-//		assertTrue(test);
+		Mockito.when(accountRepo.existsById(account1.getAccountNumber())).thenReturn(true);
+		service.deleteById(added.getAccountNumber());
+		boolean test=service.existsById(added.getAccountNumber());
+		
+		assertTrue(test);
 		
 	}
 	

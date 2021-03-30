@@ -29,7 +29,7 @@ PUT: /users/changePassword
 {
     "userId":"U118",
     "currentPassword":"Naveen@2k",
-    "changePassword":"Naveen@123",
+    "newPassword":"Naveen@123",
     "confirmPassword":"Naveen@123"
 }
 ========================================

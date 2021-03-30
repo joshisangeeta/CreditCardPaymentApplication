@@ -1,0 +1,311 @@
+***********************************************
+***********                        ************
+             FLOW OF PROJECT URLS
+***********                        ************
+***********************************************
+
+
+
+
+POST: localHost:8099/users/addUser/
+Body:
+	{
+             "userId":"User200",
+             "password":"User@200kaz",
+    	     "role":"USER"
+	}
+Response: User is Added (Done by Admin/ System)
+
+
+PUT: localHost:8099/users/signUp
+Body:
+	{
+            "userId":"User200",
+    	    "key":"User@200kaz",
+    	    "createPassword":"Credit@9288",
+    	    "confirmPassword":"Credit@9288"
+	}
+
+Response: 
+	{
+    	     "userId": "User200",
+    	     "role": "USER"
+	}
+
+POST : localHost:8099/users/signIn
+
+Body:
+{
+    "userId":"User200",
+    "password":"Credit@9288"
+}
+
+Response: Signed In User200
+
+------------------------------------------------------
+
+POST: localHost:8099/customers/addCustomer/User200
+
+Body:
+   {
+        "userName": "Venkata Sai Reddy",
+        "email": "venkatasai200@gmail.com",
+        "contactNo": "7207388200",
+        "dob": "1999-10-18",
+        "address": {
+            "doorNo": "10-11B",
+            "street": "kvb",
+            "area": "Jubli hills",
+            "city": "Hydrabad",
+            "state": "Telangana",
+            "pincode": 500055
+        }
+    }
+
+Response : Customer is Added
+
+GET: localHost:8099/customers/getCustomer/User200
+
+Response:
+{
+    "userId": "User200",
+    "userName": "Venkata Sai Reddy",
+    "email": "venkatasai200@gmail.com",
+    "contactNo": "7207388200",
+    "dob": "1999-10-18",
+    "address": {
+        "doorNo": "10-11B",
+        "street": "kvb",
+        "area": "Jubli hills",
+        "city": "Hydrabad",
+        "state": "Telangana",
+        "pincode": 500055
+    }
+}
+
+--------------------------------------------------------
+
+POST: localHost:8099/accounts/addAccount/User200
+
+Body:
+{
+    "accountNumber": "32365897456",
+    "accountName": "SBI",
+    "accountBalance": 92634.46,
+    "accountType": "SAVINGS"
+}
+POST: localHost:8099/accounts/addAccount/User200
+
+Body:
+{
+    "accountNumber": "32365897526",
+    "accountName": "SBI",
+    "accountBalance": 2634.46,
+    "accountType": "SAVINGS"
+}
+
+GET: localHost:8099/accounts/getAllAccounts/User200
+
+Response:
+[
+    {
+        "accountNumber": "32365897456",
+        "accountName": "SBI",
+        "accountBalance": 92634.46,
+        "accountType": "SAVINGS"
+    },
+    {
+        "accountNumber": "32365897526",
+        "accountName": "SBI",
+        "accountBalance": 2634.46,
+        "accountType": "SAVINGS"
+    }
+]
+
+DELETE: localHost:8099/accounts/deleteAccount/User200/32365897526
+
+Response: Account Deleted
+
+------------------------------------------------------------------
+
+
+POST: localHost:8099/creditcards/addCreditCard/User200
+
+Body:
+{
+        "cardNumber": "4256652876987799",
+        "cardName": "VISA",
+        "cardType": "PREMIUM",
+        "expiryDate": "2022-10-20",
+        "bankName": "SBI",
+        "cvv": 201,
+        "cardLimit": 100000.0,
+        "usedLimit": 0.0
+}
+
+POST: localHost:8099/creditcards/addCreditCard/User200
+
+Body:
+{
+        "cardNumber": "4256652876988899",
+        "cardName": "MASTER",
+        "cardType": "IRCTCPLATINUM",
+        "expiryDate": "2023-02-26",
+        "bankName": "SBI",
+        "cvv": 316,
+        "cardLimit": 10000.0,
+        "usedLimit": 0.0
+    }
+
+GET :localHost:8099/creditcards/getAllCreditCards/User200
+
+Response:
+[
+    {
+        "cardNumber": "4256652876987799",
+        "cardName": "VISA",
+        "cardType": "PREMIUM",
+        "expiryDate": "2022-10-20",
+        "bankName": "SBI",
+        "cvv": 201,
+        "cardLimit": 100000.0,
+        "usedLimit": 0.0
+    },
+    {
+        "cardNumber": "4256652876988899",
+        "cardName": "MASTER",
+        "cardType": "IRCTCPLATINUM",
+        "expiryDate": "2023-02-26",
+        "bankName": "SBI",
+        "cvv": 316,
+        "cardLimit": 10000.0,
+        "usedLimit": 0.0
+    }
+]
+
+
+DELETE: localHost:8099/creditcards/deleteCreditCard/User200/4256652876988899
+
+Response: Credit Card is Deleted
+
+
+---------------------------------------------------------------------
+
+GET : localHost:8099/transactions/transact/4256652876987799/5000.0/ToFriend
+
+Response:
+{
+    "transactionId": 12,
+    "cardNumber": "4256652876987799",
+    "transactionDate": "2021-03-30",
+    "transactionTime": "19:43:45",
+    "amount": 5000.0,
+    "status": "SUCCESSFUL",
+    "description": "ToFriend"
+}
+
+
+GET : localHost:8099/transactions/transact/4256652876987799/250.0/ToShop
+Response:
+{
+    "transactionId": 13,
+    "cardNumber": "4256652876987799",
+    "transactionDate": "2021-03-30",
+    "transactionTime": "19:44:01",
+    "amount": 250.0,
+    "status": "SUCCESSFUL",
+    "description": "ToShop"
+}
+
+
+---------------------------------------------------------------------
+
+GET: localHost:8099/statements/generateBill/4256652876987799
+{
+    "statementId": 28,
+    "dueAmount": 5250.0,
+    "billAmount": 5250.0,
+    "billDate": "2021-03-31",
+    "dueDate": "2021-04-20",
+    "cardNumber": "4256652876987799",
+    "customerName": "Venkata Sai Reddy"
+}
+
+
+GET: localHost:8099/statements/statementHistory/4256652876987799
+
+
+[
+    {
+        "statementId": 28,
+        "dueAmount":  0.0,
+        "billAmount": 5250.0,
+        "billDate": "2021-03-31",
+        "dueDate": "2021-04-20",
+        "cardNumber": "4256652876987799",
+        "customerName": "Venkata Sai Reddy"
+    }
+]
+
+---------------------------------------------------------------------
+
+GET: localHost:8099/payments/pendingBills/4256652876987799
+
+Response:
+[
+    {
+        "statementId": 28,
+        "dueAmount": 5250.0,
+        "billAmount": 5250.0,
+        "billDate": "2021-03-31",
+        "dueDate": "2021-04-20",
+        "cardNumber": "4256652876987799",
+        "customerName": "Venkata Sai Reddy"
+    }
+]
+
+POST: localHost:8099/payments/pendingBills/payUsingUPI/28
+
+BODY:
+
+{
+        "paymentId": 1,
+        "method": "UPI",
+        "amount": 5300.0,
+        "cardNumber": "4256652876987799"
+}
+
+RESPONSE:
+{
+    "paymentId": 1,
+    "method": "UPI",
+    "amount": 5300.0,
+    "cardNumber": "4256652876987799",
+    "paidDate": "2021-03-30",
+    "paidTime": "20:07:03.3039839"
+}
+
+
+
+GET: localHost:8099/payments/paymentHistory/4256652876987799
+
+
+[
+    {
+        "paymentId": 1,
+        "method": "UPI",
+        "amount": 5300.0,
+        "cardNumber": "4256652876987799",
+        "paidDate": "2021-03-31",
+        "paidTime": "03:07:03"
+    }
+]
+
+----------------------------------------------------------------------
+
+
+**********************************************************************
+*********************                              *******************
+*********************    Application Completed     *******************
+*********************                              *******************
+**********************************************************************

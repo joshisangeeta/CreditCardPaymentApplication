@@ -218,6 +218,29 @@ Response:
 }
 
 
+GET: localHost:8099/transactions/transactionHistory/4256652876987799
+
+Response:
+[
+{
+    "transactionId": 12,
+    "cardNumber": "4256652876987799",
+    "transactionDate": "2021-03-30",
+    "transactionTime": "19:43:45",
+    "amount": 5000.0,
+    "status": "SUCCESSFUL",
+    "description": "ToFriend"
+},
+{
+    "transactionId": 13,
+    "cardNumber": "4256652876987799",
+    "transactionDate": "2021-03-30",
+    "transactionTime": "19:44:01",
+    "amount": 250.0,
+    "status": "SUCCESSFUL",
+    "description": "ToShop"
+}
+]
 ---------------------------------------------------------------------
 
 GET: localHost:8099/statements/generateBill/4256652876987799
@@ -296,11 +319,30 @@ GET: localHost:8099/payments/paymentHistory/4256652876987799
         "method": "UPI",
         "amount": 5300.0,
         "cardNumber": "4256652876987799",
-        "paidDate": "2021-03-31",
-        "paidTime": "03:07:03"
+        "paidDate": "2021-03-30",
+        "paidTime": "20:10:03"
     }
 ]
 
+
+POST: localHost:8099/payments/pay/payUsingUPI/4256652876987799
+
+BODY:
+{
+        "paymentId": 9,
+        "method": "UPI",
+        "amount": 3000.0
+}
+
+Response:
+{
+    "paymentId": 9,
+    "method": "UPI",
+    "amount": 3000.0,
+    "cardNumber": "4256652876987799",
+    "paidDate": "2021-03-30",
+    "paidTime": "20:15:49.1267323"
+}
 ----------------------------------------------------------------------
 
 

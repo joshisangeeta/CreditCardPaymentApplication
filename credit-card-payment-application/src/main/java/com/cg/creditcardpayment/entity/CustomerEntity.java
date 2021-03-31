@@ -40,7 +40,7 @@ public class CustomerEntity {
 	private  LocalDate dob;
 	
 	@OneToOne(cascade=CascadeType.ALL, mappedBy="user")
-	private UserEntity user;
+	private LoginEntity user;
 		
 	@Embedded
 	private AddressModel address;

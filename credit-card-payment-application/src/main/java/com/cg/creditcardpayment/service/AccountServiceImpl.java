@@ -33,12 +33,14 @@ public class AccountServiceImpl implements IAccountService {
 	public AccountServiceImpl() {
 		
 	}
-	
-	public AccountServiceImpl(IAccountRepository accountRepo) {
+
+	public AccountServiceImpl(IAccountRepository accountRepo, ICustomerRepository customerRepo) {
 		super();
 		this.accountRepo = accountRepo;
+		this.customerRepo = customerRepo;
 		this.parser=new EMParse();
 	}
+
 
 	public IAccountRepository getAccountRepo() {
 		return accountRepo;
@@ -54,6 +56,15 @@ public class AccountServiceImpl implements IAccountService {
 
 	public void setParser(EMParse parser) {
 		this.parser = parser;
+	}
+
+	
+	public ICustomerRepository getCustomerRepo() {
+		return customerRepo;
+	}
+
+	public void setCustomerRepo(ICustomerRepository customerRepo) {
+		this.customerRepo = customerRepo;
 	}
 
 	@Override
@@ -109,10 +120,11 @@ public class AccountServiceImpl implements IAccountService {
 
 	@Override
 	public AccountModel addByCustomer(AccountModel account, String customerId) throws AccountException, CustomerException {
-		CustomerEntity customer=customerRepo.findById(customerId).orElse(null);
 		if(customerId==null) {
 			throw new CustomerException("Customer Id can not be null");
-		}else if(customer==null) {
+		}
+		CustomerEntity customer=customerRepo.findById(customerId).orElse(null);
+		if(customer==null) {
 			throw new CustomerException("Customer does not exists");
 		}
 		Set<AccountModel> accounts=customer.getAccounts().stream().map(parser::parse).collect(Collectors.toSet());
@@ -132,7 +144,7 @@ public class AccountServiceImpl implements IAccountService {
 	public Set<AccountModel> findAllByCustomerId(String customerId) throws CustomerException {
 		CustomerEntity customer=customerRepo.findById(customerId).orElse(null);
 		if(customerId==null) {
-			throw new CustomerException("Customer Id can not be null");
+			throw new CustomerException("Customer Id should not be null");
 		}else if(customer==null) {
 			throw new CustomerException("No Customer Exists");
 		}else if(customer.getAccounts().isEmpty()) {
@@ -142,7 +154,7 @@ public class AccountServiceImpl implements IAccountService {
 	}
 
 	@Override
-	public void deleteCustomerAccount(String customerId, String accountNumber) throws AccountException, CustomerException {
+	public void deleteAccountByCustomer(String customerId, String accountNumber) throws AccountException, CustomerException {
 		CustomerEntity customer=customerRepo.findById(customerId).orElse(null);
 		if(customerId==null) {
 			throw new CustomerException("Customer Id can not be null");

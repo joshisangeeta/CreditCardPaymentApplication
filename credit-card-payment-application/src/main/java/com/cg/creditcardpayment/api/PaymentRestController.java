@@ -52,6 +52,11 @@ public class PaymentRestController {
 		return ResponseEntity.ok(paymentService.payBill(pay,statementId));
 	}
 	
+	@PostMapping("/pay/payUsingUPI/{cardNumber}")
+	public ResponseEntity<PaymentModel> paybill(@RequestBody PaymentModel pay,@PathVariable("cardNumber") String cardNumber) throws PaymentException, CreditCardException, StatementException{
+		return ResponseEntity.ok(paymentService.payForCreditCard(pay,cardNumber));
+	}
+	
 	@PostMapping("/pendingBills/payUsingAccount/{statementId}/{accountNumber}")
 	public ResponseEntity<PaymentModel> paybillUsingAccount(@RequestBody PaymentModel pay,@PathVariable("statementId") Long statementId,@PathVariable("accountNumber") String accountNumber) throws PaymentException, CreditCardException, StatementException, AccountException{
 		return ResponseEntity.ok(paymentService.payBill(pay,statementId,accountNumber));

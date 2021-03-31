@@ -13,13 +13,13 @@ import com.cg.creditcardpayment.exception.CustomerException;
 import com.cg.creditcardpayment.exception.PaymentException;
 import com.cg.creditcardpayment.exception.StatementException;
 import com.cg.creditcardpayment.exception.TransactionException;
-import com.cg.creditcardpayment.exception.UserException;
+import com.cg.creditcardpayment.exception.LoginException;
 
 @RestControllerAdvice
 public class ExceptionAdvisor {
 
-	@ExceptionHandler(UserException.class)
-	public ResponseEntity<String> handleCreditCardPaymentExceptionAction(UserException excep) {
+	@ExceptionHandler(LoginException.class)
+	public ResponseEntity<String> handleCreditCardPaymentExceptionAction(LoginException excep) {
 		return new ResponseEntity<>(excep.getMessage(),HttpStatus.BAD_REQUEST);
 	}
 	

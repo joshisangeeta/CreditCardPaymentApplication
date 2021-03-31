@@ -2,6 +2,7 @@ package com.cg.creditcardpayment.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -21,6 +22,7 @@ import com.cg.creditcardpayment.dao.IPaymentRepository;
 import com.cg.creditcardpayment.entity.CreditCardEntity;
 import com.cg.creditcardpayment.entity.CustomerEntity;
 import com.cg.creditcardpayment.entity.PaymentEntity;
+import com.cg.creditcardpayment.exception.CreditCardException;
 import com.cg.creditcardpayment.exception.PaymentException;
 import com.cg.creditcardpayment.model.CardName;
 import com.cg.creditcardpayment.model.CardType;
@@ -37,7 +39,7 @@ class PaymentServiceTest {
 	private PaymentServiceImpl service;
 
 	@Test
-	@DisplayName("PaymentDetails should retrive")
+	@DisplayName("PaymentServiceImplTest :: All Payment Details should retrive")
 	void testGetAll() {
 		CreditCardEntity creditCard1=new CreditCardEntity("2568479632140",CardName.VISA,CardType.GOLD,LocalDate.parse("2022-10-18"),"SBI",623,10000.0,10000.0,new CustomerEntity());
 		
@@ -61,7 +63,7 @@ class PaymentServiceTest {
 	
 	
 	@Test
-	@DisplayName("get by Id ")
+	@DisplayName("PaymentServiceImplTest :: View Payment Details By Payment Id ")
 	void testGetById () throws PaymentException {
 		CreditCardEntity creditCard1=new CreditCardEntity("2568479632140",CardName.VISA,CardType.GOLD,LocalDate.parse("2022-10-18"),"SBI",623,10000.0,10000.0,new CustomerEntity());
 		
@@ -79,7 +81,7 @@ class PaymentServiceTest {
 	}
 	
 	@Test
-	@DisplayName("get by id return null")
+	@DisplayName("PaymentServiceImplTest :: Return Null When payment doesnt exists")
 	void testGetByIdNull() throws PaymentException {		
 		
 		Mockito.when(paymentRepo.findById(1L)).thenReturn(Optional.empty());
@@ -90,28 +92,44 @@ class PaymentServiceTest {
 	
 	
 	
-//	@Test
-//	@DisplayName("Payment Details should throw Exception.")
-//	void paymentDetailsShouldDisplayException() throws PaymentException {
-//		CreditCardEntity creditCard1=new CreditCardEntity("2568479632140","VISA","Gold",LocalDate.parse("2022-10-18"),"SBI",623);
-//				
-//		PaymentEntity payment=new PaymentEntity(1L,"UPI",6000.0,creditCard1);
-//		
-//		PaymentEntity payment1=new PaymentEntity(1L,"UPI",6000.0,creditCard1);
-//		Mockito.when(paymentRepo.save(payment)).thenReturn(payment);
-//		
-//		
-//		
-//		PaymentModel expected=new PaymentModel(1L,"UPI",6000.0,creditCard1.getCardNumber());
-//		PaymentModel expected1=new PaymentModel(1L,"UPI",6000.0,creditCard1.getCardNumber());
-////		PaymentModel added=service.add(expected);
-////		Mockito.when(paymentRepo.save(payment1)).thenThrow(PaymentException.class);
-//		Mockito.when(paymentRepo.save(payment1)).thenThrow(new  PaymentException("Payment "+payment.getPaymentId()+" is already Exists"));
-//		
-//		
-////		System.out.println(added);
-//		assertThrows(PaymentException.class, ()->{service.add(expected1);service.add(expected);}, "Payment "+payment.getPaymentId()+" is already Exists");
-////		assertThrows(PaymentException.class,()->{service.add(expected1);});
-//	}
+	@Test
+	@DisplayName("PaymentServiceImplTest :: Payment Details should throw Exception When getting pending bill cardNumber null")
+	void paymentDetailsShouldDisplayException() throws CreditCardException {
+		assertThrows(Exception.class, () -> {
+			service.pendingBills(null);
+		});
+	}
+	
+	@Test
+	@DisplayName("PaymentServiceImplTest :: Payment Bill should throw Exception When payment details are null")
+	void paymentBillUPIShouldDisplayException() throws CreditCardException {
+		assertThrows(Exception.class, () -> {
+			service.payBill(null,1L);
+		});
+	}
+	
+	@Test
+	@DisplayName("PaymentServiceImplTest :: Payment Bill should throw Exception When account details are null")
+	void paymentBillAccountShouldDisplayException() throws CreditCardException {
+		assertThrows(Exception.class, () -> {
+			service.payBill(null,1L,null);
+		});
+	}
+	
+	@Test
+	@DisplayName("PaymentServiceImplTest :: Payment History should throw Exception When cardNumber is Null ")
+	void paymentHistoryShouldDisplayException() throws CreditCardException {
+		assertThrows(Exception.class, () -> {
+			service.paymentHistory(null);
+		});
+	}
+	
+	@Test
+	@DisplayName("PaymentServiceImplTest :: Payment History should throw Exception When cardNumber is not Exists")
+	void paymentHistoryShouldDisplayExceptionCardNotFound() throws CreditCardException {
+		assertThrows(Exception.class, () -> {
+			service.paymentHistory("46576789939329");
+		});
+	}
 	
 }

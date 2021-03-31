@@ -83,7 +83,7 @@ public class AccountRestController {
 		if(account==null) {
 			response = new ResponseEntity<>("Account Doesnot Exists",HttpStatus.NOT_FOUND);
 		}else {
-			accountService.deleteCustomerAccount(customerId,accountNumber);
+			accountService.deleteAccountByCustomer(customerId,accountNumber);
 			response=new ResponseEntity<>("Account Deleted",HttpStatus.OK);
 		}
 		return response;

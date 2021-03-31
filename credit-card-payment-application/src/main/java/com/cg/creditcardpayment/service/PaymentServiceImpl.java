@@ -119,7 +119,7 @@ public class PaymentServiceImpl implements IPaymentService {
 		}		
 		Set<StatementEntity> statements =card.getStatement();			
 	
-		List<StatementModel> pendingStatements=statements.stream().filter(state->state.getDueAmount()>=1.0).distinct().map(parser::parse).collect(Collectors.toList());
+		List<StatementModel> pendingStatements=statements.stream().filter(state->state.getDueAmount()>=0.0001).distinct().map(parser::parse).collect(Collectors.toList());
 		
 		pendingStatements.sort((st1,st2)->st1.getStatementId().compareTo(st2.getStatementId()));
 		
@@ -160,7 +160,11 @@ public class PaymentServiceImpl implements IPaymentService {
 		account.setAccountBalance(accountBalance-amount);
 		payment.setAmount(amount);
 		card.setUsedLimit(card.getUsedLimit()-amount);
-		statement.setDueAmount(statement.getDueAmount()-amount);
+		if(statement.getDueAmount()-amount>=0.0) {
+			statement.setDueAmount(statement.getDueAmount()-amount);
+		}else {
+			statement.setDueAmount(0.0);
+		}
 		accountRepo.save(parser.parse(account));
 		payment.setPaidDate(LocalDate.now());
 		payment.setPaidTime(LocalTime.now());
@@ -191,12 +195,34 @@ public class PaymentServiceImpl implements IPaymentService {
 		card.setUsedLimit(card.getUsedLimit()-amount);
 		payment.setPaidDate(LocalDate.now());
 		payment.setPaidTime(LocalTime.now());
-		statement.setDueAmount(dueAmount-amount);
+		if(dueAmount-amount>=0.0) {
+			statement.setDueAmount(dueAmount-amount);
+		}else {
+			statement.setDueAmount(0.0);
+		}
 		statementRepo.save(parser.parse(statement));
 		paymentService.add(payment);
 		return payment;
 	}
 
+	@Override
+	public PaymentModel payForCreditCard(PaymentModel pay, String cardNumber) throws PaymentException, CreditCardException, StatementException{
+		CreditCardEntity card=creditCardRepo.findById(cardNumber).orElse(null);
+		if(card==null) {
+			throw new CreditCardException("Card does not exists");
+		}
+		PaymentModel payment=new PaymentModel();
+		payment.setPaymentId(pay.getPaymentId());
+		payment.setCardNumber(cardNumber);
+		payment.setMethod(pay.getMethod());
+		Double amount=pay.getAmount();
+		payment.setAmount(amount);
+		card.setUsedLimit(card.getUsedLimit()-amount);
+		payment.setPaidDate(LocalDate.now());
+		payment.setPaidTime(LocalTime.now());
+		paymentService.add(payment);
+		return payment;
+	}
 
 	@Override
 	public List<PaymentModel> paymentHistory(String cardNumber) throws CreditCardException {

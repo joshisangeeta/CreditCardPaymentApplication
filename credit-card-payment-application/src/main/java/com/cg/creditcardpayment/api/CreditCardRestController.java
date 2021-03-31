@@ -107,7 +107,7 @@ public class CreditCardRestController {
 		return response;
 	}
 	
-	@DeleteMapping("/deleteCreditCardOfCustomer/{customerId}/{cardNumber}")
+	@DeleteMapping("/deleteCreditCard/{customerId}/{cardNumber}")
 	public ResponseEntity<String> deleteCustomerCreditCard(@PathVariable("customerId") String customerId,@PathVariable("cardNumber") String cardNumber) throws CreditCardException, CustomerException {
 		ResponseEntity<String> response=null;
 		CreditCardModel creditCard=creditCardService.findById(cardNumber);

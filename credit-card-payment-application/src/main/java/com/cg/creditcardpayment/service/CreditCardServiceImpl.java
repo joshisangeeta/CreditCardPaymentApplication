@@ -32,9 +32,10 @@ public class CreditCardServiceImpl implements ICreditCardService {
 		
 	}
 
-	public CreditCardServiceImpl(ICreditCardRepository creditCardRepo) {
+	public CreditCardServiceImpl(ICreditCardRepository creditCardRepo,ICustomerRepository customerRepo) {
 		super();
 		this.creditCardRepo = creditCardRepo;
+		this.customerRepo=customerRepo;
 		this.parser = new EMParse();
 	}
 
@@ -113,12 +114,12 @@ public class CreditCardServiceImpl implements ICreditCardService {
 	@Override
 	public CreditCardModel addToCustomer(CreditCardModel creditCard, String customerId) throws CreditCardException, CustomerException {
 		CustomerEntity customer=customerRepo.findById(customerId).orElse(null);
-		creditCard.setCustomerId(customerId);
 		if(customerId==null) {
 			throw new CustomerException("Customer Id should not null");
 		}else if (customer==null) {
 			throw new CustomerException("Customer does not exist");
 		}
+		creditCard.setCustomerId(customerId);
 		Set<CreditCardModel> creditCards=customer.getCreditCard().stream().map(parser::parse).collect(Collectors.toSet());
 		if(creditCards.contains(creditCard)) {
 			throw new CreditCardException("CreditCard "+creditCard.getCardNumber()+" is already Exists");

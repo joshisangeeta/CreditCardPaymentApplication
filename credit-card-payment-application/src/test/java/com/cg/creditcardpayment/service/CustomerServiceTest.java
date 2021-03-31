@@ -3,6 +3,7 @@ package com.cg.creditcardpayment.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -33,7 +34,7 @@ class CustomerServiceTest {
 	private CustomerServiceImpl service;
 
 	@Test
-	@DisplayName("CustomerDetails should retrive")
+	@DisplayName("CustomerServiceImplTest :: All Customer Details should retrieve")
 	void testGetAll() {
 		AddressModel address1=new AddressModel("10-10A","kbr","Jublihills","Hydrabad","Telangana",500055);
 		AddressModel address2=new AddressModel("10-10B","kbr","Jublihills","Hydrabad","Telangana",500055);
@@ -56,7 +57,7 @@ class CustomerServiceTest {
 	}
 	
 	@Test
-	@DisplayName("CustomerDetails add")
+	@DisplayName("CustomerServiceImplTest :: Customer Details Should be Added")
 	void testAdd() throws CustomerException {
 		AddressModel address1=new AddressModel("10-10A","kbr","Jublihills","Hydrabad","Telangana",500055);
 		
@@ -73,7 +74,7 @@ class CustomerServiceTest {
 	}
 	
 	@Test
-	@DisplayName("CustomerDetails should delete")
+	@DisplayName("CustomerServiceImplTest :: Customer Details should be delete")
 	void testDelete() throws CustomerException {
 		AddressModel address1=new AddressModel("10-10A","kbr","Jublihills","Hydrabad","Telangana",500055);
 		
@@ -100,7 +101,7 @@ class CustomerServiceTest {
 	}
 	
 	@Test
-	@DisplayName("get by Id ")
+	@DisplayName("CustomerServiceImplTest :: Customer Details should be rerieve by customer Id")
 	void testGetById () throws CustomerException {
 		AddressModel address1=new AddressModel("10-10A","kbr","Jublihills","Hydrabad","Telangana",500055);
 		CustomerEntity testdata=new CustomerEntity("U107","Venkata","venkatasai1479@gmail.com","7207388240",LocalDate.parse("1999-10-18"),address1);
@@ -117,7 +118,7 @@ class CustomerServiceTest {
 	}
 	
 	@Test
-	@DisplayName("get by Id not exists")
+	@DisplayName("CustomerServiceImplTest :: Return Null when customer Id is not exists")
 	void testGetByIdNotExists () throws CustomerException {
 		AddressModel address1=new AddressModel("10-10A","kbr","Jublihills","Hydrabad","Telangana",500055);
 		CustomerEntity testdata=new CustomerEntity("U107","Venkata","venkatasai1479@gmail.com","7207388240",LocalDate.parse("1999-10-18"),address1);
@@ -130,7 +131,7 @@ class CustomerServiceTest {
 	}
 	
 	@Test
-	@DisplayName("exists by number ")
+	@DisplayName("CustomerServiceImplTest :: Exists by Mobile Number")
 	void testExistsBynumber () throws CustomerException {
 		AddressModel address1=new AddressModel("10-10A","kbr","Jublihills","Hydrabad","Telangana",500055);
 		CustomerEntity testdata=new CustomerEntity("U107","Venkata","venkatasai1479@gmail.com","7207388240",LocalDate.parse("1999-10-18"),address1);
@@ -145,7 +146,7 @@ class CustomerServiceTest {
 	}
 	
 	@Test
-	@DisplayName("exists by Email ")
+	@DisplayName("CustomerServiceImplTest :: Exists by Email")
 	void testExistsByEmail() throws CustomerException {
 		AddressModel address1=new AddressModel("10-10A","kbr","Jublihills","Hydrabad","Telangana",500055);
 		CustomerEntity testdata=new CustomerEntity("U107","Venkata","venkatasai1479@gmail.com","7207388240",LocalDate.parse("1999-10-18"),address1);
@@ -160,14 +161,12 @@ class CustomerServiceTest {
 	}
 	
 	@Test
-	@DisplayName("get by id return null")
-	void testGetByIdNull() throws CustomerException {		
+	@DisplayName("CustomerServiceImplTest :: Throw Exception when finding by Customer id given as null")
+	void testGetByIdException() throws CustomerException {		
 		
-		Mockito.when(customerRepo.findById("U101")).thenReturn(Optional.empty());
-		Mockito.when(customerRepo.existsById("U101")).thenReturn(true);
-		
-		CustomerModel actual = service.findById("U101");
-		assertNull(actual);
+		assertThrows(CustomerException.class, () -> {
+			service.findById(null);
+		});
 	}
 	
 }

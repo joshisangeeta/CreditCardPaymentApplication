@@ -32,9 +32,10 @@ public class TransactionServiceImpl implements ITransactionService {
 		
 	}
 
-	public TransactionServiceImpl(ITransactionRepository transactionRepo) {
+	public TransactionServiceImpl(ITransactionRepository transactionRepo,ICreditCardRepository creditCardRepo) {
 		super();
 		this.transactionRepo = transactionRepo;
+		this.creditCardRepo=creditCardRepo;
 		this.parser = new EMParse();
 	}
 
@@ -144,5 +145,13 @@ public class TransactionServiceImpl implements ITransactionService {
 		}
 		transact=parser.parse(transactionRepo.save(parser.parse(transact)));
 		return transact;
+	}
+	
+	@Override
+	public List<TransactionModel> transactionHistory(String cardNumber) throws CreditCardException {
+		if(cardNumber==null) {
+			throw new CreditCardException("Credit card number should not be Null");
+		}
+		return transactionRepo.findAll().stream().filter(tran->tran.getCardNumber().equals(cardNumber)).map(parser::parse).collect(Collectors.toList());
 	}
 }

@@ -11,14 +11,14 @@ import com.cg.creditcardpayment.entity.CustomerEntity;
 import com.cg.creditcardpayment.entity.PaymentEntity;
 import com.cg.creditcardpayment.entity.StatementEntity;
 import com.cg.creditcardpayment.entity.TransactionEntity;
-import com.cg.creditcardpayment.entity.UserEntity;
+import com.cg.creditcardpayment.entity.LoginEntity;
 import com.cg.creditcardpayment.model.AccountModel;
 import com.cg.creditcardpayment.model.CreditCardModel;
 import com.cg.creditcardpayment.model.CustomerModel;
 import com.cg.creditcardpayment.model.PaymentModel;
 import com.cg.creditcardpayment.model.StatementModel;
 import com.cg.creditcardpayment.model.TransactionModel;
-import com.cg.creditcardpayment.model.UserModel;
+import com.cg.creditcardpayment.model.LoginModel;
 
 @Service
 public class EMParse {
@@ -151,16 +151,16 @@ public class EMParse {
 						source.getDescription());
 	}
 	
-	public UserModel parse(UserEntity source) {
+	public LoginModel parse(LoginEntity source) {
 		return source==null?null:
-			new UserModel(source.getUserId(),
+			new LoginModel(source.getUserId(),
 						source.getPassword(),
 						source.getRole());
 	}
 	
-	public UserEntity parse(UserModel source) {
+	public LoginEntity parse(LoginModel source) {
 		return source==null?null:
-				new UserEntity(source.getUserId(),
+				new LoginEntity(source.getUserId(),
 							source.getPassword(),
 							source.getRole());
 	}

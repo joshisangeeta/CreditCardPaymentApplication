@@ -20,5 +20,7 @@ public interface ITransactionService {
 	List<TransactionModel> findAll();
 	
 	TransactionModel transaction(String cardNumber,Double amount,String discription) throws CreditCardException;
+
+	List<TransactionModel> transactionHistory(String cardNumber) throws CreditCardException;
 	
 }

@@ -2,6 +2,7 @@ package com.cg.creditcardpayment.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -20,6 +21,7 @@ import com.cg.creditcardpayment.dao.IStatementRepository;
 import com.cg.creditcardpayment.entity.CreditCardEntity;
 import com.cg.creditcardpayment.entity.CustomerEntity;
 import com.cg.creditcardpayment.entity.StatementEntity;
+import com.cg.creditcardpayment.exception.CreditCardException;
 import com.cg.creditcardpayment.exception.StatementException;
 import com.cg.creditcardpayment.model.CardName;
 import com.cg.creditcardpayment.model.CardType;
@@ -35,7 +37,7 @@ class StatementServiceTest {
 	private StatementServiceImpl service;
 
 	@Test
-	@DisplayName("StatementDetails should retrive")
+	@DisplayName("StatementServiceImplTest :: Statement Details should retrive")
 	void testGetAll() {
 		
 		CreditCardEntity creditCard1=new CreditCardEntity("2568479632140",CardName.VISA,CardType.GOLD,LocalDate.parse("2022-10-18"),"SBI",623,10000.0,10000.0,new CustomerEntity());
@@ -60,7 +62,7 @@ class StatementServiceTest {
 	
 	
 	@Test
-	@DisplayName("get by Id ")
+	@DisplayName("StatementServiceImplTest :: Get Statements by Statement Id ")
 	void testGetById () throws StatementException {
 		CreditCardEntity creditCard1=new CreditCardEntity("2568479632140",CardName.VISA,CardType.GOLD,LocalDate.parse("2022-10-18"),"SBI",623,10000.0,10000.0,new CustomerEntity());
 		
@@ -78,7 +80,7 @@ class StatementServiceTest {
 	}
 	
 	@Test
-	@DisplayName("get by id return null")
+	@DisplayName("StatementServiceImplTest :: Return Null when statement Id not Exists")
 	void testGetByIdNull() throws StatementException {		
 		
 		Mockito.when(statementRepo.findById(1L)).thenReturn(Optional.empty());
@@ -86,6 +88,50 @@ class StatementServiceTest {
 		
 		StatementModel actual = service.findById(1L);
 		assertNull(actual);
+	}
+	
+	@Test
+	@DisplayName("StatementServiceImplTest :: Get Bill Statement should throw Exception When card number is null")
+	void BilledStatementShouldDisplayExceptionNull() throws CreditCardException {
+		assertThrows(Exception.class, () -> {
+			service.getBilledStatement(null);
+		});
+	}
+	@Test
+	@DisplayName("StatementServiceImplTest :: Get Bill Statement should throw Exception When card number is null")
+	void BillStatementShouldDisplayExceptionNotExists() throws CreditCardException {
+		assertThrows(Exception.class, () -> {
+			service.getBilledStatement("8738974927492");
+		});
+	}
+	@Test
+	@DisplayName("StatementServiceImplTest :: Get UnBill Statement should throw Exception When card number is null")
+	void UnBilledStatementShouldDisplayExceptionNull() throws CreditCardException {
+		assertThrows(Exception.class, () -> {
+			service.getUnBilledStatement(null);
+		});
+	}
+	@Test
+	@DisplayName("StatementServiceImplTest :: Get UnBill Statement should throw Exception When card number is null")
+	void UnBillStatementShouldDisplayExceptionNotExists() throws CreditCardException {
+		assertThrows(Exception.class, () -> {
+			service.getUnBilledStatement("8738974927492");
+		});
+	}
+	@Test
+	@DisplayName("StatementServiceImplTest :: statement History should throw Exception When cardNumber is Null ")
+	void statementHistoryShouldDisplayException() throws CreditCardException {
+		assertThrows(Exception.class, () -> {
+			service.statementHistory(null);
+		});
+	}
+	
+	@Test
+	@DisplayName("StatementServiceImplTest :: Statement History should throw Exception When cardNumber is not Exists")
+	void StatementHistoryShouldDisplayExceptionCardNotFound() throws CreditCardException {
+		assertThrows(Exception.class, () -> {
+			service.statementHistory("46576789939329");
+		});
 	}
 	
 }

@@ -16,7 +16,7 @@ public interface IAccountService {
 	
 	void deleteById(String accountNumber) throws AccountException;
 	
-	void deleteCustomerAccount(String customerId, String accountNumber) throws AccountException, CustomerException;
+	void deleteAccountByCustomer(String customerId, String accountNumber) throws AccountException, CustomerException;
 	
 	AccountModel findById(String accountNumber) throws AccountException;
 	

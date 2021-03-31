@@ -25,5 +25,7 @@ public interface IPaymentService {
 	PaymentModel payBill(PaymentModel payment,Long statementId) throws PaymentException, CreditCardException, StatementException;
 	List<StatementModel> pendingBills(String cardNumber) throws CreditCardException;
 	List<PaymentModel> paymentHistory (String cardNumber) throws CreditCardException;
+
+	PaymentModel payForCreditCard(PaymentModel pay, String cardNumber) throws PaymentException, CreditCardException, StatementException;
 	
 }

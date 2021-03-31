@@ -59,7 +59,7 @@ public class TransactionRestController {
 	}
 	
 	@GetMapping("/transactionHistory/{cardNumber}")
-	public ResponseEntity<List<TransactionModel>> AllTransactionOfCustomer(@PathVariable("cardNumber") String cardNumber) throws CreditCardException {
+	public ResponseEntity<List<TransactionModel>> transactionHistory(@PathVariable("cardNumber") String cardNumber) throws CreditCardException {
 		return ResponseEntity.ok(transactionService.transactionHistory(cardNumber));
 	}
 }

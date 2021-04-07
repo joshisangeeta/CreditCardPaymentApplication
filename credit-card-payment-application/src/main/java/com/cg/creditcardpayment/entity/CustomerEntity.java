@@ -46,7 +46,7 @@ public class CustomerEntity {
 	private AddressModel address;
 	
 
-	@OneToMany(mappedBy="customer")
+	@OneToMany(mappedBy="customer",cascade=CascadeType.ALL)
 	private Set<CreditCardEntity> creditCard;
 
 	

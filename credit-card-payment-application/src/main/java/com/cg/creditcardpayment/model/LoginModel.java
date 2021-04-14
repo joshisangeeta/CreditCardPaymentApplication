@@ -17,7 +17,7 @@ public class LoginModel {
 	
 	@NotNull(message="password cannot be null")	
 	@NotBlank(message="password cannot be blank")
-	@Pattern(regexp="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&()])(?=\\\\S+$).{8,30}$")
+	@Pattern(regexp="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&()])(?=\\S+$).{8,30}$",message="Password should contain atleast one Capital, Lower, Numeric and special charecters with min length of 8")
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
 	
@@ -29,7 +29,7 @@ public class LoginModel {
 
 	public LoginModel(
 			@NotNull(message = "user id cannot be null") @NotBlank(message = "user id cannot be blank") @Pattern(regexp="^[A-Za-z][A-Za-z0-9]{3,20}$") String userId,
-			@NotNull(message = "password cannot be null") @NotBlank(message = "password cannot be blank") @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&()])(?=\\\\S+$).{8,30}$") String password,
+			@NotNull(message = "password cannot be null") @NotBlank(message = "password cannot be blank") @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&()])(?=\\S+$).{8,30}$") String password,
 			String role) {
 		super();
 		this.userId = userId;

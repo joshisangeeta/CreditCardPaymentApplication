@@ -126,6 +126,7 @@ class AccountServiceTest {
 		
 		AccountModel expected=new AccountModel("42356879564","Sai",90000.0,AccountType.SAVINGS);
 	
+		Mockito.when(accountRepo.existsById(testdata.getAccountNumber())).thenReturn(true);
 		Mockito.when(accountRepo.findById(testdata.getAccountNumber())).thenReturn(Optional.of(testdata));
 	
 		AccountModel actual=service.findById(testdata.getAccountNumber());
@@ -137,6 +138,7 @@ class AccountServiceTest {
 	@DisplayName("AccountServiceImpl :: Account Details should return Null when Account Number not Exists")
 	void testGetByIdNull() throws AccountException {		
 
+		Mockito.when(accountRepo.existsById("425631257892")).thenReturn(true);
 		Mockito.when(accountRepo.findById("425631257892")).thenReturn(Optional.empty());
 		
 		AccountModel actual = service.findById("425631257892");

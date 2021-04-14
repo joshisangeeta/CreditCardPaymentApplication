@@ -3,31 +3,29 @@ package com.cg.creditcardpayment.model;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 public class PaymentModel {
 	
 	private Long paymentId;
 	
-	@NotNull(message="payment method cannot be null")	
-	@NotBlank(message="payment method cannot be blank")
+	@NotNull(message="payment method cannot be null")
 	private PaymentMethod method;
 	
-	@NotNull(message="amount cannot be null")	
-	@NotBlank(message="amount cannot be blank")
+	@NotNull(message="amount cannot be null")
+	@Min(value=1,message="ammount should not be 0")
 	private Double amount;
 	
 	@NotNull(message="credit card cannot be null")	
 	@NotBlank(message="credit card cannot be blank")
+	@Pattern(regexp = "[4-6][0-9]{15}", message="Card Number should be valid number of length 16")	
 	private String cardNumber;
 	
-	@NotNull(message="paid date cannot be null")	
-	@NotBlank(message="paid date cannot be blank")
 	private LocalDate paidDate;
 	
-	@NotNull(message="paid time cannot be null")	
-	@NotBlank(message="paid time cannot be blank")
 	private LocalTime paidTime;
 	
 	

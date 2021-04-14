@@ -101,6 +101,8 @@ public class AccountServiceImpl implements IAccountService {
 	public AccountModel findById(String accountNumber) throws AccountException {
 		if(accountNumber==null) {
 			throw new AccountException("Account Number should not be null");
+		}else if(!this.existsById(accountNumber)) {
+			throw new AccountException("Account Does not Exists");
 		}
 		return parser.parse(accountRepo.findById(accountNumber).orElse(null));
 	}

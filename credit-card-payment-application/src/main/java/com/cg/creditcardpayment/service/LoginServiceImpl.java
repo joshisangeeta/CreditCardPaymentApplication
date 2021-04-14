@@ -139,11 +139,18 @@ public class LoginServiceImpl implements ILoginService {
 			throw new LoginException("User details Does not exists");
 		}
 		boolean isChanged=false;
-		if(user.getPassword().equals(changePassword.getCurrentPassword()) && changePassword.getNewPassword().equals(changePassword.getConfirmPassword())) {
-			user.setPassword(changePassword.getConfirmPassword());
-			userRepo.save(parser.parse(user));
-			isChanged= true;
+		if(user.getPassword().equals(changePassword.getCurrentPassword())) {
+			if(changePassword.getNewPassword().equals(changePassword.getConfirmPassword())) {
+				user.setPassword(changePassword.getConfirmPassword());
+				userRepo.save(parser.parse(user));
+				isChanged= true;
+			}else {
+				throw new LoginException("New Password and Confirm Password should be Same");
+			}
+		}else {
+			throw new LoginException("Authentication Failed: Password entered is wrong");
 		}
+		
 		return isChanged;
 	}
 
@@ -156,9 +163,15 @@ public class LoginServiceImpl implements ILoginService {
 		if(user==null) {
 			throw new LoginException("SignUp details Does not Exists");
 		}
-		if(user.getPassword().equals(signUp.getKey()) && signUp.getCreatePassword().equals(signUp.getConfirmPassword())) {
-			user.setPassword(signUp.getConfirmPassword());
-			user=parser.parse(userRepo.save(parser.parse(user)));
+		if(user.getPassword().equals(signUp.getKey())) {
+			if(signUp.getCreatePassword().equals(signUp.getConfirmPassword())) {
+				user.setPassword(signUp.getConfirmPassword());
+				user=parser.parse(userRepo.save(parser.parse(user)));
+			}else {
+				throw new LoginException("New Password and Confirm Password should be Same");
+			}
+		}else {
+			throw new LoginException("Authentication Failed: Key entered is wrong");
 		}
 		return user;
 	}

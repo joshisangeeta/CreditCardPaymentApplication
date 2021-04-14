@@ -1,8 +1,23 @@
 package com.cg.creditcardpayment.model;
 
+/**
+* <h1>Credit Card Model</h1>
+* The Credit Card Model program implements an application such that
+* the Customer can Add his Credit Cards to the application and perform some validation and send the details to entity.
+* 
+* <p>
+* 
+*
+* @author  
+* @version 1.0
+* @since   2021-03-31 
+*/
+
 import java.time.LocalDate;
 
 import javax.validation.constraints.Future;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -14,16 +29,14 @@ public class CreditCardModel {
 	
 	@NotNull(message="card number cannot be null")	
 	@NotBlank(message="card number cannot be blank")
-	@Pattern(regexp = "[0-9]{16}")
+	@Pattern(regexp = "[0-9]{16}", message="Card Number should be valid number of length 16")
 	private String cardNumber;
 	
 	
-	@NotNull(message="card name cannot be null")	
-	@NotBlank(message="card name cannot be blank")
+	@NotNull(message="card name cannot be null")
 	private CardName cardName;
 	
-	@NotNull(message="card type cannot be null")	
-	@NotBlank(message="card type cannot be blank")
+	@NotNull(message="card type cannot be null")
 	private CardType cardType;
 	
 	@NotNull(message="card expiry date cannot be null")	
@@ -35,22 +48,18 @@ public class CreditCardModel {
 	@NotBlank(message="Bank name cannot be blank")
 	private String bankName;
 	
-	@NotNull(message="cvv cannot be null")	
-	@NotBlank(message="cvv cannot be blank")
-	@Pattern(regexp = "[0-9]{3}")
+	@NotNull(message="cvv cannot be null")
+	@Min(value=100, message="CVV should have length of 3")
+	@Max(value=999,message="CVV should have length of 3")
     private Integer cvv;
 	
 	
-	@NotNull(message="limit cannot be null")	
-	@NotBlank(message="limit cannot be blank")
+	@NotNull(message="limit cannot be null")
     private Double cardLimit;
 	
-	@NotNull(message="limit cannot be null")	
-	@NotBlank(message="limit cannot be blank")
+	@NotNull(message="Used limit cannot be null")
     private Double usedLimit;
 	
-	@NotNull(message="customerId cannot be null")	
-	@NotBlank(message="customerId cannot be blank")
 	@JsonProperty(access = Access.WRITE_ONLY)
     private String customerId;
 	

@@ -3,9 +3,13 @@ package com.cg.creditcardpayment.api;
 import java.util.List;
 import java.util.Set;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +26,7 @@ import com.cg.creditcardpayment.service.ICreditCardService;
 
 @RestController
 @RequestMapping("/creditcards")
+@CrossOrigin
 public class CreditCardRestController {
 
 	@Autowired
@@ -44,9 +49,11 @@ public class CreditCardRestController {
 	}
 	
 	@PostMapping("/addCreditCard")
-	public ResponseEntity<CreditCardModel> add(@RequestBody CreditCardModel creditCard) throws CreditCardException {
-		
+	public ResponseEntity<CreditCardModel> add(@RequestBody @Valid CreditCardModel creditCard, BindingResult result) throws CreditCardException {
 		ResponseEntity<CreditCardModel> response=null;
+		if(result.hasErrors()) {
+			throw new CreditCardException(GlobalExceptionHandler.messageFrom(result));
+		}
 		if(creditCard==null) {
 			response = new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}else {
@@ -70,9 +77,11 @@ public class CreditCardRestController {
 	}
 	
 	@PutMapping("/updateCreditCard")
-	public ResponseEntity<CreditCardModel> updateCreditCard(@RequestBody CreditCardModel creditCard) throws CreditCardException{
-		
+	public ResponseEntity<CreditCardModel> updateCreditCard(@RequestBody @Valid CreditCardModel creditCard, BindingResult result) throws CreditCardException{
 		ResponseEntity<CreditCardModel> response=null;
+		if(result.hasErrors()) {
+			throw new CreditCardException(GlobalExceptionHandler.messageFrom(result));
+		}
 		if(creditCard==null) {
 			response=new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}else {
@@ -84,9 +93,11 @@ public class CreditCardRestController {
 	}
 	
 	@PostMapping("/addCreditCard/{customerId}")
-	public ResponseEntity<CreditCardModel> addCreditCardToCustomer(@RequestBody CreditCardModel creditCard,@PathVariable("customerId") String customerId) throws CreditCardException, CustomerException {
-		
+	public ResponseEntity<CreditCardModel> addCreditCardToCustomer(@RequestBody @Valid CreditCardModel creditCard,BindingResult result,@PathVariable("customerId") String customerId) throws CreditCardException, CustomerException {
 		ResponseEntity<CreditCardModel> response=null;
+		if(result.hasErrors()) {
+			throw new CreditCardException(GlobalExceptionHandler.messageFrom(result));
+		}
 		if(creditCard==null) {
 			response = new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}else {

@@ -2,9 +2,13 @@ package com.cg.creditcardpayment.api;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,18 +25,19 @@ import com.cg.creditcardpayment.model.CustomerModel;
 import com.cg.creditcardpayment.service.ICustomerService;
 
 @RestController
-@RequestMapping("/customers")
+@RequestMapping("/home/customers")
+@CrossOrigin
 public class CustomerRestController {
 
 	@Autowired
 	private ICustomerService customerService;
 	
-	@GetMapping("/getAllCustomers")
+	@GetMapping("/all")
 	public ResponseEntity<List<CustomerModel>> findAll() {
 		return ResponseEntity.ok(customerService.findAll());
 	}
 	
-	@GetMapping("/getCustomer/{userId}")
+	@GetMapping("/{userId}")
 	public ResponseEntity<CustomerModel> findById(@PathVariable("userId") String userId) throws CustomerException{
 		ResponseEntity<CustomerModel> response=null;
 		if(!customerService.existsById(userId)){
@@ -43,9 +48,12 @@ public class CustomerRestController {
 		return response;
 	}
 	
-	@PostMapping("/addCustomer/{userId}")
-	public ResponseEntity<String> add(@RequestBody CustomerModel customer,@PathVariable("userId") String userId) throws CustomerException {
+	@PostMapping("/add/{userId}")
+	public ResponseEntity<String> add(@RequestBody @Valid CustomerModel customer,BindingResult result ,@PathVariable("userId") String userId) throws CustomerException {
 		ResponseEntity<String> response=null;
+		if(result.hasErrors()) {
+			throw new CustomerException(GlobalExceptionHandler.messageFrom(result));
+		}
 		if(customer==null) {
 			response = new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}else {

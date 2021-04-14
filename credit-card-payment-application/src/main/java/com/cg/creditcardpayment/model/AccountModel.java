@@ -13,13 +13,10 @@ public class AccountModel {
 	@NotBlank(message="Account name cannot be blank")
 	private String accountName;
 	
-	@NotNull(message="balance cannot be null")	
-	@NotBlank(message="balance cannot be blank")
+	@NotNull(message="balance cannot be null")
 	private Double accountBalance;
 	
 	@NotNull(message="account type cannot be null")	
-	@NotBlank(message="account type cannot be blank")
-	
 	private AccountType accountType;
 	
 	

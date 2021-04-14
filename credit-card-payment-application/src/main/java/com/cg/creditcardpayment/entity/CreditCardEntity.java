@@ -53,7 +53,7 @@ public class CreditCardEntity {
 	
 	
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name="user_id")
 	private CustomerEntity customer;
 

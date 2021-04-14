@@ -1,12 +1,4 @@
 package com.cg.creditcardpayment.model;
-
-import java.time.LocalDate;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PastOrPresent;
-import javax.validation.constraints.Pattern;
-
 /**
 * <h1>Customer Model</h1>
 * The Customer Model program implements an application such that
@@ -19,6 +11,20 @@ import javax.validation.constraints.Pattern;
 * @version 1.0
 * @since   2021-03-31 
 */
+
+import java.time.LocalDate;
+
+import javax.validation.Valid;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Pattern;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+
+
 public class CustomerModel {
 	/**
 	 * This a local variable: {@link #userId} defines the unique Id for Customer
@@ -32,37 +38,46 @@ public class CustomerModel {
 	*/
 	@NotNull(message="customer name cannot be null")	
 	@NotBlank(message="customer name cannot be blank")
+	@Pattern(regexp="^[A-Za-z ]{4,}$",message="Must be more than 4 Letters and should contain Alphabets")
 	private String userName;
 	
 	/**
 	 * This a local variable: {@link #email} defines the user Email of the Customer which should not be Null
+	 * @HasGetter
+	 * @HasSetter
 	 */	
 	@NotNull(message="email cannot be null")	
 	@NotBlank(message="email cannot be blank")
-	@Pattern(regexp="^[A-Za-z0-9]{3,}[@][a-z]{2,}[a-z.]{2,}[a-z]$")
+	@Pattern(regexp="^[A-Za-z0-9]{3,}[@][a-z]{2,}[.][a-z.]{2,}[a-z]$",message="Email should be in valid format ex:(example@gmail.com)")
+	@Email(message="Email should be valid")
 	private String email;
 	
 	/**
 	 * This a local variable: {@link #contactNo} defines the user mobile number of the Customer which should not be Null
+	 * @HasGetter
+	 * @HasSetter
 	 */	
 	@NotNull(message="number cannot be null")	
 	@NotBlank(message="number cannot be blank")
-	@Pattern(regexp = "[6-9][0-9]{9}")
+	@Pattern(regexp = "[6-9][0-9]{9}",message="Mobile number should be 10 digit with valid number")
 	private String contactNo;
 
 	/**
 	 * This a local variable: {@link #dob} defines the user Date of Birth of the Customer which should not be Null
+	 * @HasGetter
+	 * @HasSetter
 	 */	
-	@NotNull(message="date of birth cannot be null")	
-	@NotBlank(message="date of birth cannot be blank")
 	@PastOrPresent(message="Date of Birth cannot be in future")
-	private  LocalDate dob;
+	@DateTimeFormat(iso=ISO.DATE)
+	@NotNull(message="Date of Birth should not be Null")
+	private LocalDate dob;
 	
 	/**
 	 * This a local variable: {@link #address} defines the user Address of the Customer which should not be Null
+	 * @HasGetter
+	 * @HasSetter
 	 */	
-	@NotNull(message="address cannot be null")	
-	@NotBlank(message="adress cannot be blank")
+	@Valid
 	private AddressModel address;
 
 	/**
@@ -85,7 +100,7 @@ public class CustomerModel {
 			@NotNull(message = "customer name cannot be null") @NotBlank(message = "customer name cannot be blank") String userName,
 			@NotNull(message = "email cannot be null") @NotBlank(message = "email cannot be blank") @Pattern(regexp = "^[A-Za-z0-9]{3,}[@][a-z]{2,}[a-z.]{2,}[a-z]$") String email,
 			@NotNull(message = "number cannot be null") @NotBlank(message = "number cannot be blank") @Pattern(regexp = "[6-9][0-9]{9}") String contactNo,
-			@NotNull(message = "date of birth cannot be null") @NotBlank(message = "date of birth cannot be blank") @PastOrPresent(message = "Expiry date cannot be in future") LocalDate dob,
+			@NotNull(message = "date of birth cannot be null") @NotBlank(message = "date of birth cannot be blank") @PastOrPresent(message = "Date of Birth cannot be in future") LocalDate dob,
 			@NotNull(message = "address cannot be null") @NotBlank(message = "adress cannot be blank") AddressModel address) {
 		super();
 		this.userId = userId;
@@ -237,13 +252,13 @@ public class CustomerModel {
 			return false;
 		return true;
 	}
+	
 	/**
 	 * Returns a string representation of the object. In general, the toString method returns a string that "textually represents" this object. 
 	 * The result should be a concise but informative representation that is easy for a person to read.
 	 * 
 	 * @return a string representation of the object.
 	 */
-
 	@Override
 	public String toString() {
 		return String.format("userId=%s, userName=%s, email=%s, contactNo=%s, dob=%s, address=%s",

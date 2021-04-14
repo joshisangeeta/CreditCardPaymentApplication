@@ -60,7 +60,7 @@ public class CustomerServiceImpl implements ICustomerService {
 	public CustomerModel addCustomer(CustomerModel customer,String userId) throws CustomerException {
 		if(customer !=null) {
 			if(customerRepo.existsById(userId)) {
-				throw new CustomerException(constant1+customer.getUserId()+constant);
+				throw new CustomerException(constant1+userId+constant);
 			}else if (customerRepo.existsByContactNo(customer.getContactNo())) {
 				throw new CustomerException("Customer with number "+customer.getContactNo()+constant);
 			}else if (customerRepo.existsByEmail(customer.getEmail())) {

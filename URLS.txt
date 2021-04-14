@@ -59,9 +59,9 @@ PUT: /customers/updateCustomer/{userId}
 
 ===================================================
 
-GET: /accounts/getAllAccounts
+GET: localHost:8099/home/customer/accounts/allAccounts
 
-GET: /accounts/getAccount/{accountnumber}
+GET: localHost:8099/home/customer/accounts/{accountnumber}
 
 GET: /accounts/getAllAccounts/{customerId}
 
@@ -77,12 +77,12 @@ POST: /accounts/addAccount/{customerId}
     }
 
 
-DELETE: /accounts/deleteAccount/{accountnumber}
+DELETE: localHost:8099/home/customer/accounts/{accountnumber}
 
-DELETE: /accounts/deleteAccount/{customerId}/{accountnumber}
+DELETE: localHost:8099/home/customer/accounts/{customerId}/{accountnumber}
 
 
-DELETE: /accounts/updateAccount
+update: /accounts/updateAccount
 
 
 

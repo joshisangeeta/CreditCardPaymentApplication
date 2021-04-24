@@ -56,15 +56,7 @@ public class LoginServiceImpl implements ILoginService {
 			if(userRepo.existsById(user.getUserId())) {
 				throw new LoginException("User "+user.getUserId()+" is already Exists");
 			}
-			if(!user.getUserId().matches("^[A-Za-z][A-Za-z0-9]{3,20}$")) {
-				throw new LoginException("UserId should be non empty and minimum of length 4");
-			}
-			if(!user.getPassword().matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&()])(?=\\S+$).{8,}$")) {
-				throw new LoginException("Password should contain upper case, Lower case, Special charecter, numbers and length minimum 8");
-			}
-			else {
-				user=parser.parse(userRepo.save(parser.parse(user)));
-			}
+			user=parser.parse(userRepo.save(parser.parse(user)));
 		}
 		return user;
 	}

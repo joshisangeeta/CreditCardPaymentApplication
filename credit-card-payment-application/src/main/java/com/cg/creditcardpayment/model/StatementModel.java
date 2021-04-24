@@ -1,6 +1,7 @@
 package com.cg.creditcardpayment.model;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -20,6 +21,10 @@ public class StatementModel {
 	@NotNull(message="bill date cannot be null")	
 	@NotBlank(message="bill date cannot be blank")
 	private LocalDate billDate;
+	
+	@NotNull(message="bill date cannot be null")	
+	@NotBlank(message="bill date cannot be blank")
+	private LocalTime billTime;
 	
 	@NotNull(message="due date cannot be null")	
 	@NotBlank(message="due date cannot be blank")
@@ -50,6 +55,7 @@ public class StatementModel {
 			@NotNull(message = "bill amount cannot be null") @NotBlank(message = "bill amount cannot be blank") Double billAmount,
 			Double dueAmount,
 			@NotNull(message = "bill date cannot be null") @NotBlank(message = "bill date cannot be blank") LocalDate billDate,
+			LocalTime billTime,
 			@NotNull(message = "due date cannot be null") @NotBlank(message = "due date cannot be blank") LocalDate dueDate,
 			@NotNull(message = "credit card cannot be null") @NotBlank(message = "credit card cannot be blank") String cardNumber,
 			@NotNull(message="customer name cannot be null") @NotBlank(message="customer name cannot be blank") String customerName) {
@@ -57,10 +63,29 @@ public class StatementModel {
 		this.statementId=statementId;
 		this.dueAmount = dueAmount;
 		this.billDate = billDate;
+		this.billTime = billTime;
 		this.billAmount=billAmount;
 		this.dueDate = dueDate;
 		this.cardNumber = cardNumber;
 		this.customerName=customerName;
+	}
+
+
+
+	/**
+	 * @return the billTime
+	 */
+	public LocalTime getBillTime() {
+		return billTime;
+	}
+
+
+
+	/**
+	 * @param billTime the billTime to set
+	 */
+	public void setBillTime(LocalTime billTime) {
+		this.billTime = billTime;
 	}
 
 

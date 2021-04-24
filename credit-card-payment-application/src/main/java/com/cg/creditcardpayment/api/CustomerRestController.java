@@ -32,7 +32,7 @@ public class CustomerRestController {
 	@Autowired
 	private ICustomerService customerService;
 	
-	@GetMapping("/all")
+	@GetMapping()
 	public ResponseEntity<List<CustomerModel>> findAll() {
 		return ResponseEntity.ok(customerService.findAll());
 	}
@@ -41,14 +41,14 @@ public class CustomerRestController {
 	public ResponseEntity<CustomerModel> findById(@PathVariable("userId") String userId) throws CustomerException{
 		ResponseEntity<CustomerModel> response=null;
 		if(!customerService.existsById(userId)){
-			response=new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			response=new ResponseEntity<>(customerService.findById(userId),HttpStatus.NOT_FOUND);
 		}else {
-			response=new ResponseEntity<>(customerService.findById(userId),HttpStatus.FOUND);
+			response=new ResponseEntity<>(customerService.findById(userId),HttpStatus.OK);
 		}
 		return response;
 	}
 	
-	@PostMapping("/add/{userId}")
+	@PostMapping("/{userId}")
 	public ResponseEntity<String> add(@RequestBody @Valid CustomerModel customer,BindingResult result ,@PathVariable("userId") String userId) throws CustomerException {
 		ResponseEntity<String> response=null;
 		if(result.hasErrors()) {
@@ -63,7 +63,7 @@ public class CustomerRestController {
 		return response;
 	}
 	
-	@DeleteMapping("/deleteCustomer/{userId}")
+	@DeleteMapping("/{userId}")
 	public ResponseEntity<String> deleteUser(@PathVariable("userId") String userId) throws CustomerException {
 		ResponseEntity<String> response=null;
 		CustomerModel customer=customerService.findById(userId);
@@ -77,7 +77,7 @@ public class CustomerRestController {
 		return response;
 	}
 	
-	@PutMapping("/updateCustomer/{userId}")
+	@PutMapping("/{userId}")
 	public ResponseEntity<CustomerModel> updateUser(@RequestBody CustomerModel user,@PathVariable("userId") String userId) throws CustomerException{
 		
 		ResponseEntity<CustomerModel> response=null;

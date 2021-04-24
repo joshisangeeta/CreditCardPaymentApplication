@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.cg.creditcardpayment.exception.AccountException;
 import com.cg.creditcardpayment.exception.CreditCardException;
+import com.cg.creditcardpayment.exception.CustomerException;
 import com.cg.creditcardpayment.exception.PaymentException;
 import com.cg.creditcardpayment.exception.StatementException;
 import com.cg.creditcardpayment.model.PaymentModel;
@@ -27,5 +28,9 @@ public interface IPaymentService {
 	List<PaymentModel> paymentHistory (String cardNumber) throws CreditCardException;
 
 	PaymentModel payForCreditCard(PaymentModel pay, String cardNumber) throws PaymentException, CreditCardException, StatementException;
+
+	List<PaymentModel> paymentHistoryById(String userId) throws CustomerException, CreditCardException;
+
+	PaymentModel payForCreditCardAccount(PaymentModel pay, String cardNumber, String accountNumber) throws PaymentException, CreditCardException, StatementException, AccountException;
 	
 }

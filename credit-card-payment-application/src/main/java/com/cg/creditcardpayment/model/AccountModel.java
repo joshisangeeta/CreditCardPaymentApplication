@@ -1,19 +1,24 @@
 package com.cg.creditcardpayment.model;
 
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 public class AccountModel {
 	
 	@NotNull(message="Account name cannot be null")	
 	@NotBlank(message="Account name cannot be blank")
+	@Pattern(regexp="^[1-9][0-9]{8,17}$",message="Enter a valid account number")
 	private String accountNumber;
 	
 	@NotNull(message="Account name cannot be null")	
 	@NotBlank(message="Account name cannot be blank")
+	@Pattern(regexp="^[A-Z a-z]{6,30}$",message="Enter the name according bank records")
 	private String accountName;
 	
 	@NotNull(message="balance cannot be null")
+	@DecimalMin(value="0.1",message="Account Balance should not be less than 0")
 	private Double accountBalance;
 	
 	@NotNull(message="account type cannot be null")	

@@ -25,45 +25,30 @@ import com.cg.creditcardpayment.model.CreditCardModel;
 import com.cg.creditcardpayment.service.ICreditCardService;
 
 @RestController
-@RequestMapping("/creditcards")
+@RequestMapping("/home/customers/creditcards")
 @CrossOrigin
 public class CreditCardRestController {
 
 	@Autowired
 	private ICreditCardService creditCardService;
 	
-	@GetMapping("/getAllCreditCards")
+	@GetMapping()
 	public ResponseEntity<List<CreditCardModel>> findAll() {
 		return ResponseEntity.ok(creditCardService.findAll());
 	}
 	
-	@GetMapping("/getCreditCard/{cardNumber}")
+	@GetMapping("/{cardNumber}")
 	public ResponseEntity<CreditCardModel> findById(@PathVariable("cardNumber") String cardNumber) throws CreditCardException{
 		ResponseEntity<CreditCardModel> response=null;
 		if(!(creditCardService.existsById(cardNumber)) || cardNumber==null) {
 			response=new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}else {
-			response=new ResponseEntity<>(creditCardService.findById(cardNumber),HttpStatus.FOUND);
+			response=new ResponseEntity<>(creditCardService.findById(cardNumber),HttpStatus.OK);
 		}
 		return response;
 	}
 	
-	@PostMapping("/addCreditCard")
-	public ResponseEntity<CreditCardModel> add(@RequestBody @Valid CreditCardModel creditCard, BindingResult result) throws CreditCardException {
-		ResponseEntity<CreditCardModel> response=null;
-		if(result.hasErrors()) {
-			throw new CreditCardException(GlobalExceptionHandler.messageFrom(result));
-		}
-		if(creditCard==null) {
-			response = new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}else {
-			creditCard=creditCardService.add(creditCard);
-			response= new ResponseEntity<>(creditCard, HttpStatus.CREATED);
-		}
-		return response;
-	}
-	
-	@DeleteMapping("/deleteCreditCard/{cardNumber}")
+	@DeleteMapping("/{cardNumber}")
 	public ResponseEntity<String> deleteCreditCard(@PathVariable("cardNumber") String cardNumber) throws CreditCardException {
 		ResponseEntity<String> response=null;
 		CreditCardModel creditCard=creditCardService.findById(cardNumber);
@@ -76,7 +61,7 @@ public class CreditCardRestController {
 		return response;
 	}
 	
-	@PutMapping("/updateCreditCard")
+	@PutMapping()
 	public ResponseEntity<CreditCardModel> updateCreditCard(@RequestBody @Valid CreditCardModel creditCard, BindingResult result) throws CreditCardException{
 		ResponseEntity<CreditCardModel> response=null;
 		if(result.hasErrors()) {
@@ -92,7 +77,7 @@ public class CreditCardRestController {
 		return response;
 	}
 	
-	@PostMapping("/addCreditCard/{customerId}")
+	@PostMapping("/{customerId}")
 	public ResponseEntity<CreditCardModel> addCreditCardToCustomer(@RequestBody @Valid CreditCardModel creditCard,BindingResult result,@PathVariable("customerId") String customerId) throws CreditCardException, CustomerException {
 		ResponseEntity<CreditCardModel> response=null;
 		if(result.hasErrors()) {
@@ -107,18 +92,18 @@ public class CreditCardRestController {
 		return response;
 	}
 	
-	@GetMapping("/getAllCreditCards/{customerId}")
+	@GetMapping("/all/{customerId}")
 	public ResponseEntity<Set<CreditCardModel>> getAllCreditCardsOfCustomer(@PathVariable("customerId") String customerId) throws CreditCardException, CustomerException{
 		ResponseEntity<Set<CreditCardModel>> response=null;
 		if(customerId==null) {
 			response=new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}else {
-			response=new ResponseEntity<>(creditCardService.findByCustomerId(customerId),HttpStatus.FOUND);
+			response=new ResponseEntity<>(creditCardService.findByCustomerId(customerId),HttpStatus.OK);
 		}
 		return response;
 	}
 	
-	@DeleteMapping("/deleteCreditCard/{customerId}/{cardNumber}")
+	@DeleteMapping("/{customerId}/{cardNumber}")
 	public ResponseEntity<String> deleteCustomerCreditCard(@PathVariable("customerId") String customerId,@PathVariable("cardNumber") String cardNumber) throws CreditCardException, CustomerException {
 		ResponseEntity<String> response=null;
 		CreditCardModel creditCard=creditCardService.findById(cardNumber);

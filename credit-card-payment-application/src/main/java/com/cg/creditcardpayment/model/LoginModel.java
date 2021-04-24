@@ -12,7 +12,7 @@ public class LoginModel {
 	
 	@NotNull(message="user id cannot be null")	
 	@NotBlank(message="user id cannot be blank")
-	@Pattern(regexp="^[A-Za-z][A-Za-z0-9]{3,20}$")
+	@Pattern(regexp="^[A-Za-z][A-Za-z0-9]{3,20}$",message="user id should be min length 4")
 	private String userId;
 	
 	@NotNull(message="password cannot be null")	

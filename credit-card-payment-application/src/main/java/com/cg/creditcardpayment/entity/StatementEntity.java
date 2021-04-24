@@ -1,6 +1,7 @@
 package com.cg.creditcardpayment.entity;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,6 +31,9 @@ public class StatementEntity {
 	@Column(name="bill_date",nullable=false)
 	private LocalDate billDate;
 	
+	@Column(name="bill_time",nullable=false)
+	private LocalTime billTime;
+	
 	@Column(name="due_date",nullable=false)
 	private LocalDate dueDate;
 	
@@ -44,12 +48,13 @@ public class StatementEntity {
 		/*Default Constructor*/
 	}
 	
-	public StatementEntity(Long statementId, Double billAmount, Double dueAmount, LocalDate billDate, LocalDate dueDate,CreditCardEntity creditCard) {
+	public StatementEntity(Long statementId, Double billAmount, Double dueAmount, LocalDate billDate,LocalTime billTime, LocalDate dueDate,CreditCardEntity creditCard) {
 		super();
 		this.statementId=statementId;
 		this.billAmount = billAmount;
 		this.dueAmount=dueAmount;
 		this.billDate = billDate;
+		this.billTime = billTime;
 		this.dueDate = dueDate;
 		this.creditCard=creditCard;
 		this.customerName=creditCard.getCustomer().getName();
@@ -87,6 +92,20 @@ public class StatementEntity {
 
 	public void setBillDate(LocalDate billDate) {
 		this.billDate = billDate;
+	}
+
+	/**
+	 * @return the billTime
+	 */
+	public LocalTime getBillTime() {
+		return billTime;
+	}
+
+	/**
+	 * @param billTime the billTime to set
+	 */
+	public void setBillTime(LocalTime billTime) {
+		this.billTime = billTime;
 	}
 
 	public LocalDate getDueDate() {

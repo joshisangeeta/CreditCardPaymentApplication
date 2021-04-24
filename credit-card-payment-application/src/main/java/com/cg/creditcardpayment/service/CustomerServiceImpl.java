@@ -100,7 +100,11 @@ public class CustomerServiceImpl implements ICustomerService {
 		}else if(!customerRepo.existsById(userId)) {
 			throw new CustomerException(constant1+userId+" is not Exists");
 		}
-		return parser.parse(customerRepo.findById(userId).orElse(null));
+		CustomerEntity user = customerRepo.findById(userId).orElse(null);
+		if(user==null) {
+			throw new CustomerException(constant1+userId+" is not Exists");
+		}
+		return parser.parse(user);
 	}
 
 	@Override

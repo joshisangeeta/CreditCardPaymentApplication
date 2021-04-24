@@ -3,6 +3,7 @@ package com.cg.creditcardpayment.service;
 import java.util.List;
 
 import com.cg.creditcardpayment.exception.CreditCardException;
+import com.cg.creditcardpayment.exception.CustomerException;
 import com.cg.creditcardpayment.exception.TransactionException;
 import com.cg.creditcardpayment.model.TransactionModel;
 
@@ -22,5 +23,7 @@ public interface ITransactionService {
 	TransactionModel transaction(String cardNumber,Double amount,String discription) throws CreditCardException;
 
 	List<TransactionModel> transactionHistory(String cardNumber) throws CreditCardException;
+
+	List<TransactionModel>  transactionHistoryById(String userId) throws TransactionException, CustomerException, CreditCardException;
 	
 }

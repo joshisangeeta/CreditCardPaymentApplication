@@ -50,7 +50,7 @@ public class CustomerEntity {
 	private Set<CreditCardEntity> creditCard;
 
 	
-	@ManyToMany(fetch=FetchType.LAZY,cascade= CascadeType.ALL)
+	@ManyToMany(fetch=FetchType.LAZY)
 	@JoinTable(name="customer_account",
 	joinColumns=@JoinColumn(name="user_id"),
 	inverseJoinColumns=@JoinColumn(name="account_number"))

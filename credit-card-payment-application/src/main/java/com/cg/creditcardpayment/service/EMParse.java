@@ -116,6 +116,7 @@ public class EMParse {
 						source.getBillAmount(),
 						source.getDueAmount(),
 						source.getBillDate(),
+						source.getBillTime(),
 						source.getDueDate(),
 						source.getCreditCard().getCardNumber(),
 						source.getCreditCard().getCustomer().getName());
@@ -127,6 +128,7 @@ public class EMParse {
 							source.getBillAmount(),
 							source.getDueAmount(),
 							source.getBillDate(),
+							source.getBillTime(),
 							source.getDueDate(),
 							creditCardRepo.findById(source.getCardNumber()).orElse(null));
 	}

@@ -12,7 +12,7 @@ public class SignUp {
 	
 	@NotNull(message="Key cannot be null")	
 	@NotBlank(message="Key cannot be blank")
-	@Pattern(regexp="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{4,10}$")
+//	@Pattern(regexp="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{4,10}$")
 	private String key;
 	
 	@NotNull(message="Create password cannot be null")	

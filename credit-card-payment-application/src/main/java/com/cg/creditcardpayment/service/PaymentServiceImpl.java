@@ -2,6 +2,8 @@ package com.cg.creditcardpayment.service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -11,16 +13,19 @@ import org.springframework.stereotype.Service;
 
 import com.cg.creditcardpayment.dao.IAccountRepository;
 import com.cg.creditcardpayment.dao.ICreditCardRepository;
+import com.cg.creditcardpayment.dao.ICustomerRepository;
 import com.cg.creditcardpayment.dao.IPaymentRepository;
 import com.cg.creditcardpayment.dao.IStatementRepository;
 import com.cg.creditcardpayment.entity.AccountEntity;
 import com.cg.creditcardpayment.entity.CreditCardEntity;
+import com.cg.creditcardpayment.entity.CustomerEntity;
 import com.cg.creditcardpayment.entity.StatementEntity;
 import com.cg.creditcardpayment.exception.AccountException;
 import com.cg.creditcardpayment.exception.CreditCardException;
+import com.cg.creditcardpayment.exception.CustomerException;
 import com.cg.creditcardpayment.exception.PaymentException;
 import com.cg.creditcardpayment.exception.StatementException;
-import com.cg.creditcardpayment.model.AccountModel;
+import com.cg.creditcardpayment.model.CreditCardModel;
 import com.cg.creditcardpayment.model.PaymentModel;
 import com.cg.creditcardpayment.model.StatementModel;
 
@@ -35,6 +40,9 @@ public class PaymentServiceImpl implements IPaymentService {
 	private ICreditCardRepository creditCardRepo;
 	
 	@Autowired
+	private ICustomerRepository customerRepo;
+	
+	@Autowired
 	private IAccountRepository accountRepo;
 	
 	@Autowired
@@ -42,7 +50,9 @@ public class PaymentServiceImpl implements IPaymentService {
 
 	@Autowired
 	private IPaymentService paymentService;
-	
+	/**
+	 * 
+	 */
 	@Autowired
 	private EMParse parser;
 	
@@ -50,6 +60,10 @@ public class PaymentServiceImpl implements IPaymentService {
 		
 	}
 
+	/**
+	 * 
+	 * @param paymentRepo
+	 */
 	public PaymentServiceImpl(IPaymentRepository paymentRepo) {
 		super();
 		this.paymentRepo = paymentRepo;
@@ -57,6 +71,10 @@ public class PaymentServiceImpl implements IPaymentService {
 	}
 
 
+	/**
+	 * @param PaymentModel Object
+	 * @return PaymentModel Object
+	 */
 	@Override
 	public PaymentModel add(PaymentModel payment) throws PaymentException {
 		if(payment !=null) {
@@ -69,6 +87,10 @@ public class PaymentServiceImpl implements IPaymentService {
 		return payment;
 	}
 
+	/**
+	 * @param PaymentModel Object
+	 * @return PaymentModel Object
+	 */
 	@Override
 	public PaymentModel save(PaymentModel payment) throws PaymentException {
 		if(payment==null) {
@@ -77,6 +99,9 @@ public class PaymentServiceImpl implements IPaymentService {
 		return parser.parse(paymentRepo.save(parser.parse(payment)));
 	}
 
+	/**
+	 * @param paymentId Long
+	 */
 	@Override
 	public void deleteById(Long paymentId) throws PaymentException {
 		if(paymentId==null) {
@@ -87,6 +112,10 @@ public class PaymentServiceImpl implements IPaymentService {
 		paymentRepo.deleteById(paymentId);
 	}
 
+	/**
+	 * @param paymentId Long
+	 * @return PaymentModel Object
+	 */
 	@Override
 	public PaymentModel findById(Long paymentId) throws PaymentException {
 		if(paymentId==null) {
@@ -97,18 +126,28 @@ public class PaymentServiceImpl implements IPaymentService {
 		return parser.parse(paymentRepo.findById(paymentId).orElse(null));
 	}
 
+	/**
+	 * @return List of PaymentModel Object
+	 */
 	@Override
 	public List<PaymentModel> findAll() {
 		return paymentRepo.findAll().stream().map(parser::parse).collect(Collectors.toList());
 	}
 
 
+	/**
+	 * @return boolean
+	 */
 	@Override
 	public boolean existsById(Long paymentId) {
 		return paymentRepo.existsById(paymentId);
 	}
 
 
+	/**
+	 * @param cardNumber String
+	 * @return List of StatementModel Object
+	 */
 	@Override
 	public List<StatementModel> pendingBills(String cardNumber) throws CreditCardException {
 		CreditCardEntity card=creditCardRepo.findById(cardNumber).orElse(null);
@@ -127,6 +166,15 @@ public class PaymentServiceImpl implements IPaymentService {
 	}
 
 
+	/**
+	 * @param PaymentModel Object
+	 * @param statementId Long
+	 * @param accountNumber String
+	 * @return PaymentModel Object
+	 * 
+	 * @throws PaymentException, CreditCardException, StatementException, AccountException
+	 * 
+	 */
 	@Override
 	public PaymentModel payBill(PaymentModel pay, Long statementId,String accountNumber) throws PaymentException, CreditCardException, StatementException, AccountException {
 		
@@ -142,6 +190,10 @@ public class PaymentServiceImpl implements IPaymentService {
 		}else if(statement==null) {
 			throw new StatementException("Statement Does not ");
 		}
+		Long paymentId=0L;
+		if(!this.findAll().isEmpty()) {
+			paymentId = this.findAll().stream().max(Comparator.comparingLong(PaymentModel::getPaymentId)).get().getPaymentId();
+		}
 		PaymentModel payment=new PaymentModel();
 		payment.setCardNumber(pay.getCardNumber());
 		payment.setMethod(pay.getMethod());
@@ -156,8 +208,14 @@ public class PaymentServiceImpl implements IPaymentService {
 		Double accountBalance=acc.getAccountBalance();
 		
 		Double amount=pay.getAmount();
-		AccountModel account=parser.parse(accountRepo.findById(accountNumber).orElse(null));
-		account.setAccountBalance(accountBalance-amount);
+		
+		if(accountBalance<amount) {
+			throw new AccountException("Balanace Insufficient");
+		}else if(accountBalance>=amount) {
+			accountBalance-=amount;
+			acc.setAccountBalance(accountBalance);
+			accountRepo.save(acc);
+		}
 		payment.setAmount(amount);
 		card.setUsedLimit(card.getUsedLimit()-amount);
 		if(statement.getDueAmount()-amount>=0.0) {
@@ -165,11 +223,49 @@ public class PaymentServiceImpl implements IPaymentService {
 		}else {
 			statement.setDueAmount(0.0);
 		}
-		accountRepo.save(parser.parse(account));
 		payment.setPaidDate(LocalDate.now());
 		payment.setPaidTime(LocalTime.now());
-		payment.setPaymentId(pay.getPaymentId());
+		payment.setPaymentId(paymentId+1);
 		statementRepo.save(parser.parse(statement));
+		paymentService.add(payment);
+		return payment;
+	}
+	
+	@Override
+	public PaymentModel payForCreditCardAccount(PaymentModel pay, String cardNumber, String accountNumber) throws PaymentException, CreditCardException, StatementException, AccountException {
+		CreditCardEntity card=creditCardRepo.findById(cardNumber).orElse(null);
+		if(card==null) {
+			throw new CreditCardException("Card does not exists");
+		}
+		Long paymentId=0L;
+		if(!this.findAll().isEmpty()) {
+			paymentId = this.findAll().stream().max(Comparator.comparingLong(PaymentModel::getPaymentId)).get().getPaymentId();
+		}
+		if(accountNumber==null) {
+			throw new AccountException("account number can not be null");
+		}
+		AccountEntity acc=accountRepo.findById(accountNumber).orElse(null);
+		if(acc==null) {
+			throw new AccountException("Account Does not Exists");
+		}
+		Double accountBalance=acc.getAccountBalance();
+		PaymentModel payment=new PaymentModel();
+		Double amount=pay.getAmount();
+		payment.setAmount(amount);
+		if(accountBalance<amount) {
+			throw new AccountException("Balanace Insufficient");
+		}else if(accountBalance>=amount) {
+			accountBalance-=amount;
+			acc.setAccountBalance(accountBalance);
+			accountRepo.save(acc);
+		}
+		payment.setPaymentId(paymentId+1);
+		payment.setCardNumber(cardNumber);
+		payment.setMethod(pay.getMethod());
+		
+		card.setUsedLimit(card.getUsedLimit()-amount);
+		payment.setPaidDate(LocalDate.now());
+		payment.setPaidTime(LocalTime.now());
 		paymentService.add(payment);
 		return payment;
 	}
@@ -185,8 +281,12 @@ public class PaymentServiceImpl implements IPaymentService {
 		if(statement==null) {
 			throw new StatementException("Statement Does not exists");
 		}
+		Long paymentId=0L;
+		if(!this.findAll().isEmpty()) {
+			paymentId = this.findAll().stream().max(Comparator.comparingLong(PaymentModel::getPaymentId)).get().getPaymentId();
+		}
 		PaymentModel payment=new PaymentModel();
-		payment.setPaymentId(pay.getPaymentId());
+		payment.setPaymentId(paymentId+1);
 		payment.setCardNumber(pay.getCardNumber());
 		payment.setMethod(pay.getMethod());
 		Double amount=pay.getAmount();
@@ -211,8 +311,12 @@ public class PaymentServiceImpl implements IPaymentService {
 		if(card==null) {
 			throw new CreditCardException("Card does not exists");
 		}
+		Long paymentId=0L;
+		if(!this.findAll().isEmpty()) {
+			paymentId = this.findAll().stream().max(Comparator.comparingLong(PaymentModel::getPaymentId)).get().getPaymentId();
+		}
 		PaymentModel payment=new PaymentModel();
-		payment.setPaymentId(pay.getPaymentId());
+		payment.setPaymentId(paymentId+1);
 		payment.setCardNumber(cardNumber);
 		payment.setMethod(pay.getMethod());
 		Double amount=pay.getAmount();
@@ -235,6 +339,27 @@ public class PaymentServiceImpl implements IPaymentService {
 		return card.getPayments().stream().map(parser::parse).collect(Collectors.toList());
 	}
 	
+	@Override
+	public List<PaymentModel> paymentHistoryById(String userId) throws CustomerException, CreditCardException {
+		if(userId==null) {
+			throw new CustomerException("UserId cannot be Null");
+		}
+		CustomerEntity customer=customerRepo.findById(userId).orElse(null);
+		if(customer==null) {
+			throw new CustomerException("Customer Does not Exists");
+		}else if(customer.getCreditCard().isEmpty()) {
+			throw new CreditCardException("No Credit Cards Exists");
+		}
+		List<CreditCardModel> creditCards = customer.getCreditCard().stream().map(parser::parse).collect(Collectors.toList());
+		
+		List<PaymentModel> payments= new ArrayList<>();
+		
+		for(int i=0;i<creditCards.size();i++) {
+			payments.addAll(this.paymentHistory(creditCards.get(i).getCardNumber()));
+		}
+		return payments;
+	}
+
 	
 
 }

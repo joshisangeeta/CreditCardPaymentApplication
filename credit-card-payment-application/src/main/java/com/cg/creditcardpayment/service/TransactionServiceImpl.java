@@ -2,6 +2,7 @@ package com.cg.creditcardpayment.service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,10 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cg.creditcardpayment.dao.ICreditCardRepository;
+import com.cg.creditcardpayment.dao.ICustomerRepository;
 import com.cg.creditcardpayment.dao.ITransactionRepository;
 import com.cg.creditcardpayment.entity.CreditCardEntity;
+import com.cg.creditcardpayment.entity.CustomerEntity;
 import com.cg.creditcardpayment.exception.CreditCardException;
+import com.cg.creditcardpayment.exception.CustomerException;
 import com.cg.creditcardpayment.exception.TransactionException;
+import com.cg.creditcardpayment.model.CreditCardModel;
 import com.cg.creditcardpayment.model.TransactionModel;
 import com.cg.creditcardpayment.model.TransactionStatus;
 
@@ -24,6 +29,9 @@ public class TransactionServiceImpl implements ITransactionService {
 	
 	@Autowired
 	private ICreditCardRepository creditCardRepo;
+	
+	@Autowired
+	private ICustomerRepository customerRepo;
 
 	@Autowired
 	private EMParse parser;
@@ -153,5 +161,26 @@ public class TransactionServiceImpl implements ITransactionService {
 			throw new CreditCardException("Credit card number should not be Null");
 		}
 		return transactionRepo.findAll().stream().filter(tran->tran.getCardNumber().equals(cardNumber)).map(parser::parse).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<TransactionModel> transactionHistoryById(String userId) throws TransactionException, CustomerException, CreditCardException {
+		if(userId==null) {
+			throw new CustomerException("UserId cannot be Null");
+		}
+		CustomerEntity customer=customerRepo.findById(userId).orElse(null);
+		if(customer==null) {
+			throw new CustomerException("Customer Does not Exists");
+		}else if(customer.getCreditCard().isEmpty()) {
+			throw new CreditCardException("No Credit Cards Exists");
+		}
+		List<CreditCardModel> creditCards = customer.getCreditCard().stream().map(parser::parse).collect(Collectors.toList());
+		
+		List<TransactionModel> transactions= new ArrayList<>();
+		
+		for(int i=0;i<creditCards.size();i++) {
+			transactions.addAll(this.transactionHistory(creditCards.get(i).getCardNumber()));
+		}
+		return transactions;
 	}
 }

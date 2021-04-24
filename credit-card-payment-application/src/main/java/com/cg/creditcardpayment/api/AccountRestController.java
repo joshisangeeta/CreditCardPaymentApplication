@@ -34,7 +34,7 @@ public class AccountRestController {
 	private IAccountService accountService;
 	
 	
-	@GetMapping("/allAccounts")
+	@GetMapping()
 	public ResponseEntity<List<AccountModel>> findAll() {
 		return ResponseEntity.ok(accountService.findAll());
 	}
@@ -46,7 +46,7 @@ public class AccountRestController {
 		return response;
 	}
 	
-	@PostMapping("/add")
+	@PostMapping()
 	@Transactional
 	public ResponseEntity<String> addAccount(@RequestBody @Valid AccountModel account, BindingResult result) throws AccountException {
 		ResponseEntity<String> response=null;
@@ -109,7 +109,7 @@ public class AccountRestController {
 		return response;
 	}
 	
-	@PostMapping("/add/{customerId}")
+	@PostMapping("/{customerId}")
 	public ResponseEntity<AccountModel> addAccountToCustomer(@RequestBody @Valid AccountModel account,BindingResult result,@PathVariable("customerId") String customerId) throws AccountException, CustomerException {
 		ResponseEntity<AccountModel> response=null;
 		if(result.hasErrors()) {
@@ -124,7 +124,7 @@ public class AccountRestController {
 		return response;
 	}
 	
-	@GetMapping("/allAccounts/{customerId}")
+	@GetMapping("/all/{customerId}")
 	public ResponseEntity<Set<AccountModel>> getAllAccountOfCustomer(@PathVariable("customerId") String customerId) throws CustomerException{
 		ResponseEntity<Set<AccountModel>> response=null;
 		if(customerId==null) {

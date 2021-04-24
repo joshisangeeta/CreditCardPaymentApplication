@@ -2,7 +2,6 @@ package com.cg.creditcardpayment.entity;
 
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -33,7 +32,7 @@ public class AccountEntity {
 	@Enumerated(EnumType.STRING)
 	private AccountType accountType;
 	
-	@ManyToMany(fetch=FetchType.LAZY,cascade= CascadeType.ALL)
+	@ManyToMany(fetch=FetchType.LAZY)
 	@JoinTable(name="customer_account",
 	joinColumns=@JoinColumn(name="account_number"),
 	inverseJoinColumns=@JoinColumn(name="user_id"))

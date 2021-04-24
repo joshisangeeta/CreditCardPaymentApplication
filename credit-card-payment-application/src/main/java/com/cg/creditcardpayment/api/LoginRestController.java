@@ -32,36 +32,59 @@ public class LoginRestController {
 	@Autowired
 	private ILoginService userService;
 	
-	
+	/**
+	 * 
+	 * @return allUsers
+	 */
 	@GetMapping("/allUsers")
 	public ResponseEntity<List<LoginModel>> findAll() {
 		return ResponseEntity.ok(userService.findAll());
 	}
 	
+	/**
+	 * 
+	 * @param userId
+	 * @return LoginModel Object
+	 * @throws LoginException
+	 */
 	@GetMapping("/user/{userId}")
 	public ResponseEntity<LoginModel> findById(@PathVariable("userId")String userId) throws LoginException {
 		return new ResponseEntity<>(userService.findById(userId),HttpStatus.OK);
 	}
 		
+	/**
+	 * 
+	 * @param user Object
+	 * @param result
+	 * @return Object contains role
+	 * @throws LoginException
+	 */
 	@PostMapping("/signIn")
-	public ResponseEntity<String> signIn(@RequestBody @Valid LoginModel user,BindingResult result) throws LoginException{
-		ResponseEntity<String> response=null;
+	public ResponseEntity<LoginModel> signIn(@RequestBody @Valid LoginModel user,BindingResult result) throws LoginException{
+		ResponseEntity<LoginModel> response=null;
 		if (result.hasErrors()) {
 			throw new LoginException(GlobalExceptionHandler.messageFrom(result));
 		}
 		if(userService.existsById(user.getUserId())) {
+			userService.signIn(user);
 			if(userService.signIn(user)) {
-				response=new ResponseEntity<>("Signed In "+user.getUserId(),HttpStatus.ACCEPTED);
+				response=new ResponseEntity<>(userService.findById(user.getUserId()),HttpStatus.ACCEPTED);
 			}else {
-				response=new ResponseEntity<>("Login Id and password did not match",HttpStatus.UNAUTHORIZED);
+				response=new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 			}		
 		}else {
-			response=new ResponseEntity<>("User with "+user.getUserId()+" Does not exists",HttpStatus.NOT_FOUND);
+			response=new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		return response;
 	}
 	
-	
+	/**
+	 * 
+	 * @param user
+	 * @param result
+	 * @return
+	 * @throws LoginException
+	 */
 	@PostMapping("/user")
 	public ResponseEntity<String> add(@RequestBody @Valid LoginModel user,BindingResult result) throws LoginException {
 		if (result.hasErrors()) {
@@ -71,12 +94,25 @@ public class LoginRestController {
 		return new ResponseEntity<>("User is Added",HttpStatus.CREATED);
 	}
 	
+	/**
+	 * 
+	 * @param userId
+	 * @return
+	 * @throws LoginException
+	 */
 	@DeleteMapping("/user/{userId}")
 	public ResponseEntity<String> deleteUser(@PathVariable("userId") String userId) throws LoginException {
 		userService.deleteById(userId);
 		return new ResponseEntity<>("User is Deleted",HttpStatus.OK);
 	}
 	
+	/**
+	 * 
+	 * @param changePassword
+	 * @param result
+	 * @return
+	 * @throws LoginException
+	 */
 	@PutMapping("/changePassword")
 	public ResponseEntity<String> updateUser(@RequestBody @Valid ChangePassword changePassword,BindingResult result ) throws LoginException {
 		ResponseEntity<String> response=null;
@@ -91,6 +127,13 @@ public class LoginRestController {
 		return response;
 	}
 	
+	/**
+	 * 
+	 * @param signUp
+	 * @param result
+	 * @return
+	 * @throws LoginException
+	 */
 	@PutMapping("/signUp")
 	public ResponseEntity<String> signUp(@RequestBody @Valid SignUp signUp, BindingResult result ) throws LoginException {
 		ResponseEntity<String> response=null;
@@ -101,5 +144,4 @@ public class LoginRestController {
 		response=new ResponseEntity<>("Signed Up Succesfully",HttpStatus.ACCEPTED);
 		return response;
 	}
-	
 }

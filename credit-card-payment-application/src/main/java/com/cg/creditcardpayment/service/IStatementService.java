@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.cg.creditcardpayment.exception.CreditCardException;
+import com.cg.creditcardpayment.exception.CustomerException;
 import com.cg.creditcardpayment.exception.StatementException;
 import com.cg.creditcardpayment.model.StatementModel;
 
@@ -27,5 +28,12 @@ public interface IStatementService {
 	StatementModel getBilledStatement(String cardNumber) throws CreditCardException, StatementException;
 	StatementModel getUnBilledStatement(String cardNumber) throws CreditCardException;
 	
+	List<StatementModel> getBilledStatementsById(String customerId) throws CreditCardException, CustomerException, StatementException;
+	List<StatementModel> getUnBilledStatementsById(String customerId) throws CreditCardException, CustomerException, StatementException;
+	
 	List<StatementModel> statementHistory(String cardNumber) throws CreditCardException;
+	List<StatementModel> statementHistoryByUserId(String userId) throws CreditCardException, CustomerException;
+
+
+	
 }

@@ -162,9 +162,7 @@ public class StatementServiceImpl implements IStatementService {
 					throw new StatementException("No bill statements");
 				}
 			}else {
-				StatementModel billed = this.statementHistory(cardNumber).stream().filter(st->st.getBillDate().isEqual(bill.getBillDate())).findFirst().orElse(null);
-
-				return billed;
+				return this.statementHistory(cardNumber).stream().filter(st->st.getBillDate().isEqual(bill.getBillDate())).findFirst().orElse(null);
 				
 			}
 			
@@ -185,7 +183,7 @@ public class StatementServiceImpl implements IStatementService {
 					bill.setDueAmount(0.0);
 				}
 			}else {
-				if(used==amount) {
+				if(used>=amount) {
 					bill.setBillAmount(amount);
 					bill.setDueAmount(amount);
 				}else {
@@ -227,7 +225,6 @@ public class StatementServiceImpl implements IStatementService {
 			throw new CreditCardException("Credit card"+cardNumber+" does not Exists");
 		}
 		LocalDate bill = lastBillDate;
-		System.out.println(lastBillDate);
 		Set<TransactionEntity> transaction =credit.getTransaction();	
 		Double amount=transaction.stream().filter(trans->(trans.getTransactionDate().isAfter(bill) || trans.getTransactionDate().isEqual(bill))).mapToDouble(amo -> amo.getAmount()).sum();
 		
@@ -315,13 +312,13 @@ public class StatementServiceImpl implements IStatementService {
 	@Override
 	public List<StatementModel> getUnBilledStatementsById(String customerId) throws CreditCardException, CustomerException, StatementException {
 		if(customerId==null) {
-			throw new CustomerException("UserId cannot be Null");
+			throw new CustomerException("Customer Id cannot be Null");
 		}
 		CustomerEntity customer=customerRepo.findById(customerId).orElse(null);
 		if(customer==null) {
-			throw new CustomerException("Customer Does not Exists");
+			throw new CustomerException("Customer not Exists");
 		}else if(customer.getCreditCard().isEmpty()) {
-			throw new CreditCardException("No Credit Cards Exists");
+			throw new CreditCardException("Credit Cards not Exists");
 		}
 		List<CreditCardModel> creditCards = customer.getCreditCard().stream().map(parser::parse).collect(Collectors.toList());
 		

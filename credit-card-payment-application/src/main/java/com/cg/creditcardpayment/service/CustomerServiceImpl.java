@@ -53,6 +53,7 @@ public class CustomerServiceImpl implements ICustomerService {
 
 	String constant=" is Already Exists";
 	String constant1="Customer ";
+	String notExists=" is not Exists";
 
 	
 	@Override
@@ -88,7 +89,7 @@ public class CustomerServiceImpl implements ICustomerService {
 		if(userId==null) {
 			throw new CustomerException("CustomerId can not be null");
 		}else if(!customerRepo.existsById(userId)) {
-			throw new CustomerException(constant1+userId+" is not Exists");
+			throw new CustomerException(constant1+userId+notExists);
 		}
 		customerRepo.deleteById(userId);
 	}
@@ -98,11 +99,11 @@ public class CustomerServiceImpl implements ICustomerService {
 		if(userId==null) {
 			throw new CustomerException("CustomerId can not be null");
 		}else if(!customerRepo.existsById(userId)) {
-			throw new CustomerException(constant1+userId+" is not Exists");
+			throw new CustomerException(constant1+userId+notExists);
 		}
 		CustomerEntity user = customerRepo.findById(userId).orElse(null);
 		if(user==null) {
-			throw new CustomerException(constant1+userId+" is not Exists");
+			throw new CustomerException(constant1+userId+notExists);
 		}
 		return parser.parse(user);
 	}

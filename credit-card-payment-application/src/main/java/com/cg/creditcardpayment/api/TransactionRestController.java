@@ -16,13 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cg.creditcardpayment.exception.CreditCardException;
 import com.cg.creditcardpayment.exception.CustomerException;
+import com.cg.creditcardpayment.exception.StatementException;
 import com.cg.creditcardpayment.exception.TransactionException;
 import com.cg.creditcardpayment.model.TransactionModel;
 import com.cg.creditcardpayment.service.ITransactionService;
 
 @RestController
 @RequestMapping("/home/customer/creditcard/transactions")
-@CrossOrigin
+@CrossOrigin("http://localhost:3000")
 public class TransactionRestController {
 
 	@Autowired
@@ -96,6 +97,11 @@ public class TransactionRestController {
 		return ResponseEntity.ok(transactionService.transactionHistory(cardNumber));
 	}
 	
+	@GetMapping("/statement/{statementId}")
+	public ResponseEntity<List<TransactionModel>> transactionHistoryOfCard(@PathVariable("statementId") Long statementId) throws CreditCardException, TransactionException, StatementException {
+		return ResponseEntity.ok(transactionService.transactionHistoryForBill(statementId));
+	}
+		
 	@GetMapping("/history/user/{userId}")
 	public ResponseEntity<List<TransactionModel>> transactionHistoryById(@PathVariable("userId") String userId) throws CreditCardException, TransactionException, CustomerException {
 		return ResponseEntity.ok(transactionService.transactionHistoryById(userId));

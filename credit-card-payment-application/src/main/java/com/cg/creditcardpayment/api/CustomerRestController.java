@@ -26,7 +26,7 @@ import com.cg.creditcardpayment.service.ICustomerService;
 
 @RestController
 @RequestMapping("/home/customers")
-@CrossOrigin
+@CrossOrigin("http://localhost:3000")
 public class CustomerRestController {
 
 	@Autowired

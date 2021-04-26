@@ -22,9 +22,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
-
 public class CreditCardModel {
 	
 	@NotNull(message="card number cannot be null")	
@@ -60,7 +57,9 @@ public class CreditCardModel {
 	@NotNull(message="Used limit cannot be null")
     private Double usedLimit;
 	
-	@JsonProperty(access = Access.WRITE_ONLY)
+/**
+ * 	@JsonProperty(access = Access.WRITE_ONLY)
+ */
     private String customerId;
 	
 	public CreditCardModel() {

@@ -27,7 +27,7 @@ import com.cg.creditcardpayment.service.IAccountService;
 
 @RestController
 @RequestMapping("/home/customer/accounts")
-@CrossOrigin
+@CrossOrigin("http://localhost:3000")
 public class AccountRestController {
 
 	@Autowired

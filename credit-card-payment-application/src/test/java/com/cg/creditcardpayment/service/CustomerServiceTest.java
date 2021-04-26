@@ -2,7 +2,6 @@ package com.cg.creditcardpayment.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
@@ -118,7 +117,7 @@ class CustomerServiceTest {
 	}
 	
 	@Test
-	@DisplayName("CustomerServiceImplTest :: Return Null when customer Id is not exists")
+	@DisplayName("CustomerServiceImplTest :: Throw Exception when customer Id is not exists")
 	void testGetByIdNotExists () throws CustomerException {
 		AddressModel address1=new AddressModel("10-10A","kbr","Jublihills","Hydrabad","Telangana",500055);
 		CustomerEntity testdata=new CustomerEntity("U107","Venkata","venkatasai1479@gmail.com","7207388240",LocalDate.parse("1999-10-18"),address1);
@@ -126,8 +125,9 @@ class CustomerServiceTest {
 		Mockito.when(customerRepo.findById(testdata.getUserId())).thenReturn(Optional.empty());
 		Mockito.when(customerRepo.existsById(testdata.getUserId())).thenReturn(true);
 		
-		CustomerModel actual = service.findById(testdata.getUserId());
-		assertNull(actual);
+		assertThrows(CustomerException.class, () -> {
+			service.findById(testdata.getUserId());
+		});
 	}
 	
 	@Test

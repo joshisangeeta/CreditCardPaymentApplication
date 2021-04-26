@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.cg.creditcardpayment.exception.CreditCardException;
 import com.cg.creditcardpayment.exception.CustomerException;
+import com.cg.creditcardpayment.exception.StatementException;
 import com.cg.creditcardpayment.exception.TransactionException;
 import com.cg.creditcardpayment.model.TransactionModel;
 
@@ -25,5 +26,7 @@ public interface ITransactionService {
 	List<TransactionModel> transactionHistory(String cardNumber) throws CreditCardException;
 
 	List<TransactionModel>  transactionHistoryById(String userId) throws TransactionException, CustomerException, CreditCardException;
+
+	List<TransactionModel> transactionHistoryForBill(Long statementId) throws TransactionException, CreditCardException, StatementException;
 	
 }

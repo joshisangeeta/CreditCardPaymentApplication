@@ -23,7 +23,7 @@ import com.cg.creditcardpayment.service.IPaymentService;
 
 @RestController
 @RequestMapping("/home/customer/creditcard/payments")
-@CrossOrigin
+@CrossOrigin("http://localhost:3000")
 public class PaymentRestController {
 
 	@Autowired

@@ -26,7 +26,7 @@ import com.cg.creditcardpayment.service.ILoginService;
 
 @RestController
 @RequestMapping("/login")
-@CrossOrigin
+@CrossOrigin("http://localhost:3000")
 public class LoginRestController {
 
 	@Autowired

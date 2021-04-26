@@ -192,7 +192,10 @@ public class PaymentServiceImpl implements IPaymentService {
 		}
 		Long paymentId=0L;
 		if(!this.findAll().isEmpty()) {
-			paymentId = this.findAll().stream().max(Comparator.comparingLong(PaymentModel::getPaymentId)).get().getPaymentId();
+			 PaymentModel payId = this.findAll().stream().max(Comparator.comparingLong(PaymentModel::getPaymentId)).orElse(null);
+			if(payId!=null) {
+				paymentId = payId.getPaymentId();
+			}
 		}
 		PaymentModel payment=new PaymentModel();
 		payment.setCardNumber(pay.getCardNumber());
@@ -209,9 +212,9 @@ public class PaymentServiceImpl implements IPaymentService {
 		
 		Double amount=pay.getAmount();
 		
-		if(accountBalance<amount) {
+		if(accountBalance-amount<0) {
 			throw new AccountException("Balanace Insufficient");
-		}else if(accountBalance>=amount) {
+		}else if(accountBalance-amount>=0) {
 			accountBalance-=amount;
 			acc.setAccountBalance(accountBalance);
 			accountRepo.save(acc);
@@ -239,7 +242,10 @@ public class PaymentServiceImpl implements IPaymentService {
 		}
 		Long paymentId=0L;
 		if(!this.findAll().isEmpty()) {
-			paymentId = this.findAll().stream().max(Comparator.comparingLong(PaymentModel::getPaymentId)).get().getPaymentId();
+			 PaymentModel payId = this.findAll().stream().max(Comparator.comparingLong(PaymentModel::getPaymentId)).orElse(null);
+			if(payId!=null) {
+				paymentId = payId.getPaymentId();
+			}
 		}
 		if(accountNumber==null) {
 			throw new AccountException("account number can not be null");
@@ -252,9 +258,10 @@ public class PaymentServiceImpl implements IPaymentService {
 		PaymentModel payment=new PaymentModel();
 		Double amount=pay.getAmount();
 		payment.setAmount(amount);
-		if(accountBalance<amount) {
+		if(accountBalance-amount<0) {
 			throw new AccountException("Balanace Insufficient");
-		}else if(accountBalance>=amount) {
+		}
+		if(accountBalance-amount>=0) {
 			accountBalance-=amount;
 			acc.setAccountBalance(accountBalance);
 			accountRepo.save(acc);
@@ -283,7 +290,10 @@ public class PaymentServiceImpl implements IPaymentService {
 		}
 		Long paymentId=0L;
 		if(!this.findAll().isEmpty()) {
-			paymentId = this.findAll().stream().max(Comparator.comparingLong(PaymentModel::getPaymentId)).get().getPaymentId();
+			 PaymentModel payId = this.findAll().stream().max(Comparator.comparingLong(PaymentModel::getPaymentId)).orElse(null);
+			if(payId!=null) {
+				paymentId = payId.getPaymentId();
+			}
 		}
 		PaymentModel payment=new PaymentModel();
 		payment.setPaymentId(paymentId+1);
@@ -309,11 +319,14 @@ public class PaymentServiceImpl implements IPaymentService {
 	public PaymentModel payForCreditCard(PaymentModel pay, String cardNumber) throws PaymentException, CreditCardException, StatementException{
 		CreditCardEntity card=creditCardRepo.findById(cardNumber).orElse(null);
 		if(card==null) {
-			throw new CreditCardException("Card does not exists");
+			throw new CreditCardException("Credit Card does not exists");
 		}
 		Long paymentId=0L;
 		if(!this.findAll().isEmpty()) {
-			paymentId = this.findAll().stream().max(Comparator.comparingLong(PaymentModel::getPaymentId)).get().getPaymentId();
+			 PaymentModel payId = this.findAll().stream().max(Comparator.comparingLong(PaymentModel::getPaymentId)).orElse(null);
+			if(payId!=null) {
+				paymentId = payId.getPaymentId();
+			}
 		}
 		PaymentModel payment=new PaymentModel();
 		payment.setPaymentId(paymentId+1);

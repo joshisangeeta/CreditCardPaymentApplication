@@ -11,11 +11,14 @@ import org.springframework.stereotype.Service;
 
 import com.cg.creditcardpayment.dao.ICreditCardRepository;
 import com.cg.creditcardpayment.dao.ICustomerRepository;
+import com.cg.creditcardpayment.dao.IStatementRepository;
 import com.cg.creditcardpayment.dao.ITransactionRepository;
 import com.cg.creditcardpayment.entity.CreditCardEntity;
 import com.cg.creditcardpayment.entity.CustomerEntity;
+import com.cg.creditcardpayment.entity.StatementEntity;
 import com.cg.creditcardpayment.exception.CreditCardException;
 import com.cg.creditcardpayment.exception.CustomerException;
+import com.cg.creditcardpayment.exception.StatementException;
 import com.cg.creditcardpayment.exception.TransactionException;
 import com.cg.creditcardpayment.model.CreditCardModel;
 import com.cg.creditcardpayment.model.TransactionModel;
@@ -29,6 +32,9 @@ public class TransactionServiceImpl implements ITransactionService {
 	
 	@Autowired
 	private ICreditCardRepository creditCardRepo;
+	
+	@Autowired
+	private IStatementRepository statementRepo;
 	
 	@Autowired
 	private ICustomerRepository customerRepo;
@@ -182,5 +188,22 @@ public class TransactionServiceImpl implements ITransactionService {
 			transactions.addAll(this.transactionHistory(creditCards.get(i).getCardNumber()));
 		}
 		return transactions;
+	}
+
+	@Override
+	public List<TransactionModel> transactionHistoryForBill(Long statementId ) throws TransactionException, CreditCardException, StatementException {
+		if(statementId==null) {
+			throw new StatementException("StatementId should not be Null");
+		}
+		StatementEntity statement = statementRepo.findById(statementId).orElse(null);
+		if(statement==null) {
+			throw new StatementException("statement Does not exists");
+		}
+		CreditCardEntity card=creditCardRepo.findById(statement.getCreditCard().getCardNumber()).orElse(null);
+		if(card==null) {
+			throw new CreditCardException("Credit card Not Found");
+		}
+		return transactionRepo.findAll().stream().filter(tran->tran.getCardNumber().equals(card.getCardNumber())).filter(trans->trans.getTransactionDate().isBefore(statement.getBillDate()) && trans.getTransactionDate().plusMonths(1).isAfter(statement.getBillDate())).map(parser::parse).collect(Collectors.toList());
+
 	}
 }

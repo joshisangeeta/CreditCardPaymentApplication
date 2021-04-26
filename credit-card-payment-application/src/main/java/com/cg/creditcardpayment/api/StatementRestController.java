@@ -18,7 +18,7 @@ import com.cg.creditcardpayment.service.IStatementService;
 
 @RestController
 @RequestMapping("/home/customer/creditcard/statements")
-@CrossOrigin
+@CrossOrigin("http://localhost:3000")
 public class StatementRestController {
 
 	@Autowired
